@@ -1,14 +1,18 @@
-import logo from "./coursedo.png";
-import "./App.css";
+import Home from 'pages/Home'
+import SignIn from 'pages/SignIn'
+import SignUp from 'pages/SignUp'
+import { HashRouter as Router, Route } from 'react-router-dom'
+import { history } from 'ultis/functions'
+import './App.css'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-    </div>
-  );
+    <Router history={history}>
+      <Route exact path="/" component={Home} />
+      <Route path="/signin" component={SignIn} />
+      <Route path="/signup" component={SignUp} />
+    </Router>
+  )
 }
 
-export default App;
+export default App
