@@ -3,7 +3,7 @@ import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { history } from 'ultis/functions'
-import './App.css'
+import './App.less'
 
 function App() {
   return (
