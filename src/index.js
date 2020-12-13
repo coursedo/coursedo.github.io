@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'antd'
 import viVN from 'antd/es/locale/vi_VN'
-import { GlobalModal, GlobalModalSetup } from 'components/GlobalModal'
+import GlobalModal, { ModalProvider } from 'components/GlobalModal'
 import { persistor, store } from 'core/store'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -10,7 +10,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 import App from './App'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
-import 'antd/dist/antd.css'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -24,9 +23,7 @@ ReactDOM.render(
             }}
           >
             <App />
-            <GlobalModal
-              ref={ref => GlobalModalSetup.setGlobalModalHolder(ref)}
-            />
+            <GlobalModal />
           </IconContext.Provider>
         </PersistGate>
       </ConfigProvider>

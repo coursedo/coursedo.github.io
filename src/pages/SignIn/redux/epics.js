@@ -1,4 +1,4 @@
-import { GlobalModalSetup } from 'components/GlobalModal'
+import GlobalModal from 'components/GlobalModal'
 import { replace } from 'connected-react-router'
 import { store } from 'core/store'
 import { combineEpics, ofType } from 'redux-observable'
@@ -33,10 +33,7 @@ const signinEpic$ = action$ =>
           if (result.status === 200) {
             return SignInRequestSuccess.get(result.data)
           }
-          GlobalModalSetup.getGlobalModalHolder().alertMessage(
-            'Thông báo',
-            result.data?.err
-          )
+          GlobalModal.alertMessage('Thông báo', result.data?.err)
           return SignInRequestFailed.get(result.data.err)
         }),
         catchError(error => {
@@ -64,16 +61,10 @@ const signupEpic$ = action$ =>
         map(result => {
           if (result.status === 200) {
             store.dispatch(replace('/signin', { from: '/signup' }))
-            GlobalModalSetup.getGlobalModalHolder().alertMessage(
-              'Thông báo',
-              result.data.message
-            )
+            GlobalModal.alertMessage('Thông báo', result.data.message)
             return SignUpRequestSuccess.get(result.data)
           }
-          GlobalModalSetup.getGlobalModalHolder().alertMessage(
-            'Thông báo',
-            result.data?.message
-          )
+          GlobalModal.alertMessage('Thông báo', result.data?.message)
           return SignUpRequestFailed.get(result)
         }),
         catchError(error => {
@@ -94,7 +85,7 @@ const resetPasswordEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            GlobalModal.alertMessage(
               'Thông báo',
               'Vui lòng kiểm tra email để thay đổi mật khẩu',
               MODAL_TYPE.NORMAL,
@@ -102,10 +93,7 @@ const resetPasswordEpic$ = action$ =>
             )
             return ResetPasswordSuccess.get(result.data)
           }
-          GlobalModalSetup.getGlobalModalHolder().alertMessage(
-            'Thông báo',
-            null
-          )
+          GlobalModal.alertMessage('Thông báo', null)
           return ResetPasswordFailed.get(result)
         }),
         catchError(error => {
@@ -126,7 +114,7 @@ const createPasswordEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            GlobalModalSetup.getGlobalModalHolder().alertMessage(
+            GlobalModal.alertMessage(
               'Thông báo',
               'Tạo mật khẩu thành công. Vui lòng đăng nhập',
               MODAL_TYPE.NORMAL,
