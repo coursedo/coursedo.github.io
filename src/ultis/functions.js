@@ -2,7 +2,7 @@ import { createHashHistory } from 'history'
 
 export const history = createHashHistory({ forceRefresh: true })
 
-export const DOMAIN = 'https://lemon-aid-backend.herokuapp.com/api'
+export const DOMAIN = 'https://coursedo.herokuapp.com/api'
 export const __DEV__ = false
 
 export const LIMIT_ITEMS = 12
@@ -17,6 +17,8 @@ export const MODAL_TYPE = {
   NORMAL: 'NORMAL',
   CHOICE: 'CHOICE'
 }
+
+export const ROLES = Object.freeze({ STUDENT: 0, TEACHER: 1, ADMIN: 2 })
 
 export function log(...arg) {
   if (__DEV__) {
