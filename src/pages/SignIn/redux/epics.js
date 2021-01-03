@@ -26,15 +26,18 @@ const signinEpic$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'POST',
-        url: 'signin',
+        url: 'auth/login',
         param: action.payload
       }).pipe(
         map(result => {
-          if (result.status === 200) {
+          if (result.status === 200 && result.data?.authenticated) {
             return SignInRequestSuccess.get(result.data)
           }
-          GlobalModal.alertMessage('Thông báo', result.data?.err)
-          return SignInRequestFailed.get(result.data.err)
+          GlobalModal.alertMessage(
+            'Information',
+            'Email or password may not correct. Please try again.'
+          )
+          return SignInRequestFailed.get(result.data.message)
         }),
         catchError(error => {
           return SignInRequestFailed.get(error)
@@ -43,28 +46,25 @@ const signinEpic$ = action$ =>
     })
   )
 
-const signinSuccessEpic$ = action$ =>
-  action$.pipe(
-    ofType(SignInRequestSuccess.type),
-    map(action => {})
-  )
-
 const signupEpic$ = action$ =>
   action$.pipe(
     ofType(SignUpRequest.type),
     exhaustMap(action => {
       return request({
         method: 'POST',
-        url: 'signup',
+        url: 'auth/signup',
         param: action.payload
       }).pipe(
         map(result => {
-          if (result.status === 200) {
+          if (result.status === 201) {
             store.dispatch(replace('/signin', { from: '/signup' }))
-            GlobalModal.alertMessage('Thông báo', result.data.message)
+            GlobalModal.alertMessage(
+              'Information',
+              'Sign up succeed. Please sign in to continue.'
+            )
             return SignUpRequestSuccess.get(result.data)
           }
-          GlobalModal.alertMessage('Thông báo', result.data?.message)
+          GlobalModal.alertMessage('Information', result.data?.message)
           return SignUpRequestFailed.get(result)
         }),
         catchError(error => {
@@ -86,14 +86,14 @@ const resetPasswordEpic$ = action$ =>
         map(result => {
           if (result.status === 200) {
             GlobalModal.alertMessage(
-              'Thông báo',
-              'Vui lòng kiểm tra email để thay đổi mật khẩu',
+              'Information',
+              'Please check email to change password',
               MODAL_TYPE.NORMAL,
               () => store.dispatch(replace('/'))
             )
             return ResetPasswordSuccess.get(result.data)
           }
-          GlobalModal.alertMessage('Thông báo', null)
+          GlobalModal.alertMessage('Information', null)
           return ResetPasswordFailed.get(result)
         }),
         catchError(error => {
@@ -115,8 +115,8 @@ const createPasswordEpic$ = action$ =>
         map(result => {
           if (result.status === 200) {
             GlobalModal.alertMessage(
-              'Thông báo',
-              'Tạo mật khẩu thành công. Vui lòng đăng nhập',
+              'Information',
+              'Change new password succeed. Please sign in to continue.',
               MODAL_TYPE.NORMAL,
               () => store.dispatch(replace('/signin'))
             )
@@ -135,6 +135,5 @@ export const authEpics = combineEpics(
   signinEpic$,
   signupEpic$,
   resetPasswordEpic$,
-  signinSuccessEpic$,
   createPasswordEpic$
 )

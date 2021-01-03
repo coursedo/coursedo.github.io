@@ -1,16 +1,15 @@
 import { Button } from 'antd'
 import CInput from 'components/CInput'
 import { Form, Formik } from 'formik'
-import { SignUpRequest } from 'pages/SignIn/redux/actions'
+import { ResetPassword } from 'pages/SignIn/redux/actions'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
-import { ROLES } from 'ultis/functions'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
 
-function SignUp() {
+function ForgotPassword() {
   const history = useHistory()
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth?.user)
@@ -29,42 +28,21 @@ function SignUp() {
       .max(48, 'Email must have at most 48 characters')
       .label('Email')
       .email('Invalid email')
-      .required('* Please input email'),
-    password: yup
-      .string()
-      .required('* Please input password')
-      .min(8, 'Password must include at least 8 characters')
-      .max(48, 'Password must include at most 48 characters')
-      .matches(/(?=.{8,})/, {
-        message: 'Password must include at least 8 characters'
-      }),
-    fullName: yup
-      .string()
-      .trim()
-      .required('* Please input password')
-      .min(3, 'Full name must include at least 3 characters')
-      .max(64, 'Full name must include at most 48 characters')
-      .matches(
-        /[^a-z0-9A-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/u,
-        {
-          message: 'Invalid full name'
-        }
-      )
+      .required('* Please input email')
   })
 
-  const handleSignup = values => {
-    dispatch(
-      SignUpRequest.get({
-        ...values,
-        email: values.email.toLowerCase(),
-        role: ROLES.STUDENT
-      })
-    )
+  const handleForgot = values => {
+    // dispatch(
+    //   ResetPassword.get({
+    //     ...values,
+    //     email: values.email.toLowerCase()
+    //   })
+    // )
   }
 
   const handleKeyPress = (isValid, event, values) => {
     if (isValid && event.key === 'Enter') {
-      handleSignup(values)
+      handleForgot(values)
     }
   }
 
@@ -72,18 +50,16 @@ function SignUp() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="signin" />
+          <img src={require('assets/logo.svg')} alt="logo" />
         </a>
         <div id="loginBox">
           <Formik
             initialValues={{
-              email: '',
-              password: '',
-              fullName: ''
+              email: ''
             }}
             isInitialValid={false}
             validationSchema={validationSchema}
-            onSubmit={values => handleSignup(values)}
+            onSubmit={values => handleForgot(values)}
           >
             {({
               handleChange,
@@ -97,17 +73,9 @@ function SignUp() {
             }) => {
               return (
                 <Form className="formStyle">
-                  <span id="loginStyle">Please create a new account here</span>
-                  <CInput
-                    className="inputBox"
-                    value={values.fullName}
-                    onChange={handleChange('fullName')}
-                    onTouchStart={() => setFieldTouched('fullName')}
-                    onBlur={handleBlur('fullName')}
-                    placeholder="Full name"
-                    onKeyPress={event => handleKeyPress(isValid, event, values)}
-                    error={errors.fullName}
-                  />
+                  <span id="loginStyle">
+                    Ok let’s fetch you ya’ login details
+                  </span>
                   <CInput
                     className="inputBox"
                     value={values.email}
@@ -118,17 +86,6 @@ function SignUp() {
                     onKeyPress={event => handleKeyPress(isValid, event, values)}
                     error={errors.email}
                   />
-                  <CInput
-                    className="inputBox"
-                    type="password"
-                    onChange={handleChange('password')}
-                    onTouchStart={() => setFieldTouched('password')}
-                    value={values.password}
-                    onBlur={handleBlur('password')}
-                    placeholder="Password"
-                    onKeyPress={event => handleKeyPress(isValid, event, values)}
-                    error={errors.password}
-                  />
                   <div style={{ alignSelf: 'flex-end', marginBottom: 34 }}>
                     <span>Already have an account? </span>
                     <Button
@@ -138,11 +95,11 @@ function SignUp() {
                       onClick={() =>
                         history.push({
                           pathname: '/signin',
-                          state: { from: `/signup` }
+                          state: { from: `/forgot` }
                         })
                       }
                     >
-                      Sign in
+                      Back to Sign Up
                     </Button>
                   </div>
                   <Button
@@ -151,7 +108,7 @@ function SignUp() {
                     type="primary"
                     onClick={handleSubmit}
                   >
-                    Sign up
+                    Proceed
                   </Button>
                 </Form>
               )
@@ -161,11 +118,14 @@ function SignUp() {
       </div>
       {isDesktopOrLaptop && (
         <div id="imgBg">
-          <img src={require('../../assets/images/signup.png')} alt="signip" />
+          <img
+            src={require('../../assets/images/forgot_password.jpg')}
+            alt="fgp_img"
+          />
         </div>
       )}
     </div>
   )
 }
 
-export default SignUp
+export default ForgotPassword

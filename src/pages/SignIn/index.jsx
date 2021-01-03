@@ -1,10 +1,10 @@
-import { Button, Input } from 'antd'
+import { Button } from 'antd'
+import CInput from 'components/CInput'
 import { Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
-import { COLOR } from 'ultis/functions'
 import * as yup from 'yup'
 import { SignInRequest } from './redux/actions'
 import './signin.css'
@@ -28,17 +28,19 @@ function SignIn() {
   const validationSchema = yup.object().shape({
     password: yup
       .string()
-      .required('* Vui lòng nhập mật khẩu')
-      .min(8, 'Mật khẩu gồm 8 kí tự trở lên')
-      .max(48, 'Mật khẩu không vượt quá 48 kí tự')
+      .required('* Please input password')
+      .min(8, 'Password must include at least 8 characters')
+      .max(48, 'Password must include at most 48 characters')
       .matches(/(?=.{8,})/, {
-        message: 'Mật khẩu phải gồm 8 kí tự'
+        message: 'Password must include at least 8 characters'
       }),
     email: yup
       .string()
+      .trim()
+      .max(48, 'Email must have at most 48 characters')
       .label('Email')
-      .email('Email hiện tại không hợp lệ')
-      .required('* Vui lòng nhập email')
+      .email('Invalid email')
+      .required('* Please input email')
   })
 
   const handleLogin = values => {
@@ -57,10 +59,9 @@ function SignIn() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <span className="dimoName">coursedo</span>
+          <img src={require('assets/logo.svg')} alt="signin" />
         </a>
         <div id="loginBox">
-          <span id="loginStyle">Đăng nhập</span>
           <Formik
             initialValues={{
               password: '',
@@ -82,53 +83,58 @@ function SignIn() {
             }) => {
               return (
                 <Form className="formStyle">
-                  <Input
-                    id="inputBox"
+                  <span id="loginStyle">
+                    Sign in to your account to continue
+                  </span>
+                  <CInput
+                    className="inputBox"
                     value={values.email}
                     onChange={handleChange('email')}
                     onTouchStart={() => setFieldTouched('email')}
                     onBlur={handleBlur('email')}
                     placeholder="Email"
                     onKeyPress={event => handleKeyPress(isValid, event, values)}
+                    error={errors.email}
                   />
-                  {errors.email && <span id="errorStyle">{errors.email}</span>}
-                  <Input
-                    id="inputBox"
+                  <CInput
+                    className="inputBox"
                     type="password"
                     onChange={handleChange('password')}
                     onTouchStart={() => setFieldTouched('password')}
                     value={values.password}
                     onBlur={handleBlur('password')}
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
                     onKeyPress={event => handleKeyPress(isValid, event, values)}
+                    error={errors.password}
                   />
-                  {errors.password && (
-                    <span id="errorStyle">{errors.password}</span>
-                  )}
                   <div className="buttomBox">
-                    <Button onClick={() => history.push('/forgot')}>
-                      Quên mật khẩu
+                    <Button
+                      style={{ padding: 0 }}
+                      color="primary"
+                      type="link"
+                      onClick={() => history.push('/forgot')}
+                    >
+                      Forgot password?
                     </Button>
                     <div>
-                      <span>Chưa có tài khoản?</span>
+                      <span>Don’t have an account? </span>
                       <Button
+                        style={{ padding: 0 }}
                         color="primary"
+                        type="link"
                         onClick={() => history.push('/signup')}
                       >
-                        Đăng ký
+                        Sign up
                       </Button>
                     </div>
                   </div>
                   <Button
                     id="loginBtn"
                     disabled={!isValid}
-                    style={{
-                      backgroundColor: isValid ? COLOR.primary : COLOR.gray
-                    }}
+                    type="primary"
                     onClick={handleSubmit}
-                    size={'large'}
                   >
-                    Đăng nhập
+                    Sign in
                   </Button>
                 </Form>
               )
@@ -138,8 +144,7 @@ function SignIn() {
       </div>
       {isDesktopOrLaptop && (
         <div id="imgBg">
-          <span className="tagline">Vào bếp không khó</span>
-          <span className="tagline">Có Lemon-aid lo</span>
+          <img src={require('assets/images/signin.png')} alt="signin" />
         </div>
       )}
     </div>
