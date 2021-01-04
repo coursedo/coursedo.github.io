@@ -50,7 +50,7 @@ function CreatePasswordPage() {
     dispatch(
       CreatePassword.get({
         password: values.password,
-        token
+        token: token
       })
     )
   }

@@ -120,9 +120,9 @@ const createPasswordEpic$ = action$ =>
               MODAL_TYPE.NORMAL,
               () => store.dispatch(replace('/signin'))
             )
-            GlobalModal.alertMessage()
             return CreatePasswordSuccess.get(result.data)
           }
+          GlobalModal.alertMessage()
           return CreatePasswordFailed.get(result)
         }),
         catchError(error => {
