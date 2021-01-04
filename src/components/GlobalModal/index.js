@@ -21,18 +21,16 @@ export default class GlobalModal extends React.Component {
 
   static alertMessage = (
     iTitle = 'Information',
-    iContent,
+    iContent = 'An unexpected error has occured. Try again later.',
     iType = MODAL_TYPE.NORMAL,
     onPress = () => {}
   ) => {
     GlobalModal.instance.setState({
       isShow: true,
       title: iTitle,
-      content: iContent
-        ? iContent
-        : 'An unexpected error has occured. Try again later.',
-      type: iType ? iType : MODAL_TYPE.NORMAL,
-      onPress: onPress ? onPress : () => {}
+      content: iContent,
+      type: iType,
+      onPress
     })
   }
 

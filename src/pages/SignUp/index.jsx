@@ -128,6 +128,7 @@ function SignUp() {
                     placeholder="Password"
                     onKeyPress={event => handleKeyPress(isValid, event, values)}
                     error={errors.password}
+                    type="password"
                   />
                   <div style={{ alignSelf: 'flex-end', marginBottom: 34 }}>
                     <span>Already have an account? </span>
