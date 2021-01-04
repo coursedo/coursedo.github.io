@@ -1,27 +1,25 @@
 import { Button } from 'antd'
 import CInput from 'components/CInput'
 import { Form, Formik } from 'formik'
+import { CreatePassword } from 'pages/SignIn/redux/actions'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import * as yup from 'yup'
-import { SignInRequest } from './redux/actions'
-import './signin.css'
+import '../SignIn/signin.css'
 
-function SignIn() {
+function CreatePasswordPage() {
+  const param = useParams()
+  const { token } = param
   const history = useHistory()
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth?.user)
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
 
   useEffect(() => {
-    if (user) {
-      if (history.location.state) {
-        history.goBack()
-      } else {
-        history.replace('/')
-      }
+    if (user || !token) {
+      history.replace('/')
     }
   }, [user])
 
@@ -34,24 +32,32 @@ function SignIn() {
       .matches(/(?=.{8,})/, {
         message: 'Password must include at least 8 characters'
       }),
-    email: yup
+    confirm: yup
       .string()
-      .trim()
-      .max(48, 'Email must have at most 48 characters')
-      .label('Email')
-      .email('Invalid email')
-      .required('* Please input email')
+      .required('* Please input password')
+      .min(8, 'Password must include at least 8 characters')
+      .max(48, 'Password must include at most 48 characters')
+      .matches(/(?=.{8,})/, {
+        message: 'Password must include at least 8 characters'
+      })
+      .oneOf(
+        [yup.ref('password'), null],
+        'Confirm password must be the same as password'
+      )
   })
 
-  const handleLogin = values => {
+  const handleCreate = values => {
     dispatch(
-      SignInRequest.get({ ...values, email: values.email.toLowerCase() })
+      CreatePassword.get({
+        password: values.password,
+        token
+      })
     )
   }
 
   const handleKeyPress = (isValid, event, values) => {
     if (isValid && event.key === 'Enter') {
-      handleLogin(values)
+      handleCreate(values)
     }
   }
 
@@ -59,17 +65,17 @@ function SignIn() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="signin" />
+          <img src={require('assets/logo.svg')} alt="logo" />
         </a>
         <div id="loginBox">
           <Formik
             initialValues={{
               password: '',
-              email: ''
+              confirm: ''
             }}
             isInitialValid={false}
             validationSchema={validationSchema}
-            onSubmit={values => handleLogin(values)}
+            onSubmit={values => handleCreate(values)}
           >
             {({
               handleChange,
@@ -83,59 +89,37 @@ function SignIn() {
             }) => {
               return (
                 <Form className="formStyle">
-                  <span id="loginStyle">
-                    Sign in to your account to continue
-                  </span>
+                  <span id="loginStyle">Input new password to continue</span>
                   <CInput
                     className="inputBox"
-                    value={values.email}
-                    onChange={handleChange('email')}
-                    onTouchStart={() => setFieldTouched('email')}
-                    onBlur={handleBlur('email')}
-                    placeholder="Email"
-                    onKeyPress={event => handleKeyPress(isValid, event, values)}
-                    error={errors.email}
-                  />
-                  <CInput
-                    className="inputBox"
-                    type="password"
+                    value={values.password}
                     onChange={handleChange('password')}
                     onTouchStart={() => setFieldTouched('password')}
-                    value={values.password}
                     onBlur={handleBlur('password')}
-                    placeholder="Password"
+                    placeholder="New password"
                     onKeyPress={event => handleKeyPress(isValid, event, values)}
                     error={errors.password}
                     type="password"
                   />
-                  <div className="buttomBox">
-                    <Button
-                      style={{ padding: 0 }}
-                      color="primary"
-                      type="link"
-                      onClick={() => history.push('/forgot')}
-                    >
-                      Forgot password?
-                    </Button>
-                    <div>
-                      <span>Don’t have an account? </span>
-                      <Button
-                        style={{ padding: 0 }}
-                        color="primary"
-                        type="link"
-                        onClick={() => history.push('/signup')}
-                      >
-                        Sign up
-                      </Button>
-                    </div>
-                  </div>
+                  <CInput
+                    className="inputBox"
+                    value={values.confirm}
+                    onChange={handleChange('confirm')}
+                    onTouchStart={() => setFieldTouched('confirm')}
+                    onBlur={handleBlur('confirm')}
+                    placeholder="Confirm password"
+                    onKeyPress={event => handleKeyPress(isValid, event, values)}
+                    error={errors.confirm}
+                    type="password"
+                  />
                   <Button
+                    style={{ marginTop: 24 }}
                     id="loginBtn"
                     disabled={!isValid}
                     type="primary"
                     onClick={handleSubmit}
                   >
-                    Sign in
+                    Reset password
                   </Button>
                 </Form>
               )
@@ -145,11 +129,14 @@ function SignIn() {
       </div>
       {isDesktopOrLaptop && (
         <div id="imgBg">
-          <img src={require('assets/images/signin.png')} alt="signin" />
+          <img
+            src={require('../../assets/images/forgot_password.jpg')}
+            alt="fgp_img"
+          />
         </div>
       )}
     </div>
   )
 }
 
-export default SignIn
+export default CreatePasswordPage

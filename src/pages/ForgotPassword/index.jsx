@@ -32,12 +32,12 @@ function ForgotPassword() {
   })
 
   const handleForgot = values => {
-    // dispatch(
-    //   ResetPassword.get({
-    //     ...values,
-    //     email: values.email.toLowerCase()
-    //   })
-    // )
+    dispatch(
+      ResetPassword.get({
+        ...values,
+        email: values.email.toLowerCase()
+      })
+    )
   }
 
   const handleKeyPress = (isValid, event, values) => {

@@ -80,20 +80,20 @@ const resetPasswordEpic$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'POST',
-        url: 'reset-password',
+        url: 'auth/resetPassword',
         param: action.payload
       }).pipe(
         map(result => {
           if (result.status === 200) {
             GlobalModal.alertMessage(
               'Information',
-              'Please check email to change password',
+              result.data.message,
               MODAL_TYPE.NORMAL,
               () => store.dispatch(replace('/'))
             )
             return ResetPasswordSuccess.get(result.data)
           }
-          GlobalModal.alertMessage('Information', null)
+          GlobalModal.alertMessage()
           return ResetPasswordFailed.get(result)
         }),
         catchError(error => {
@@ -109,17 +109,18 @@ const createPasswordEpic$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'POST',
-        url: 'create-new-password',
+        url: 'auth/createPassword',
         param: action.payload
       }).pipe(
         map(result => {
           if (result.status === 200) {
             GlobalModal.alertMessage(
               'Information',
-              'Change new password succeed. Please sign in to continue.',
+              result.data.message,
               MODAL_TYPE.NORMAL,
               () => store.dispatch(replace('/signin'))
             )
+            GlobalModal.alertMessage()
             return CreatePasswordSuccess.get(result.data)
           }
           return CreatePasswordFailed.get(result)
