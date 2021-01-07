@@ -3,6 +3,7 @@ import Home from 'pages/Home'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import CreatePasswordPage from 'pages/CreatePassword'
+import VerifyEmailPage from 'pages/VerifyEmail'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { history } from 'ultis/functions'
 import './App.less'
@@ -15,6 +16,7 @@ function App() {
       <Route path="/signup" component={SignUp} />
       <Route path="/forgot" component={ForgotPassword} />
       <Route path="/reset/:token" component={CreatePasswordPage} />
+      <Route path="/verify/:token" component={VerifyEmailPage} />
     </Router>
   )
 }
