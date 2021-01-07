@@ -65,7 +65,7 @@ function CreatePasswordPage() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="logo" />
+          <img src={require('assets/logo.png')} alt="logo" />
         </a>
         <div id="loginBox">
           <Formik

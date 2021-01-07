@@ -8,6 +8,8 @@ import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
+import forgotPic from 'assets/images/forgot_password.jpg'
+import logo from 'assets/logo.png'
 
 function ForgotPassword() {
   const history = useHistory()
@@ -50,7 +52,7 @@ function ForgotPassword() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="logo" />
+          <img src={logo} alt="forgot" width={100} />
         </a>
         <div id="loginBox">
           <Formik
@@ -117,12 +119,7 @@ function ForgotPassword() {
         </div>
       </div>
       {isDesktopOrLaptop && (
-        <div id="imgBg">
-          <img
-            src={require('../../assets/images/forgot_password.jpg')}
-            alt="fgp_img"
-          />
-        </div>
+        <div id="imgBg" style={{ backgroundImage: `url(${forgotPic})` }} />
       )}
     </div>
   )

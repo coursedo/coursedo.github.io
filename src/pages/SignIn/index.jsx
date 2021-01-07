@@ -1,4 +1,6 @@
 import { Button } from 'antd'
+import signinPic from 'assets/images/signin.png'
+import logo from 'assets/logo.png'
 import CInput from 'components/CInput'
 import { Form, Formik } from 'formik'
 import React, { useEffect } from 'react'
@@ -59,7 +61,7 @@ function SignIn() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="signin" />
+          <img src={logo} alt="signin" width={100} />
         </a>
         <div id="loginBox">
           <Formik
@@ -144,9 +146,7 @@ function SignIn() {
         </div>
       </div>
       {isDesktopOrLaptop && (
-        <div id="imgBg">
-          <img src={require('assets/images/signin.png')} alt="signin" />
-        </div>
+        <div id="imgBg" style={{ backgroundImage: `url(${signinPic})` }} />
       )}
     </div>
   )
