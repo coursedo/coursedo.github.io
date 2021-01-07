@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom'
 import { ROLES } from 'ultis/functions'
 import * as yup from 'yup'
 import '../SignIn/signin.css'
+import signupPic from 'assets/images/signup.png'
+import logo from 'assets/logo.png'
 
 function SignUp() {
   const history = useHistory()
@@ -72,7 +74,7 @@ function SignUp() {
     <div id="bg">
       <div id="loginBg">
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
-          <img src={require('assets/logo.svg')} alt="signin" />
+          <img src={logo} alt="signup" width={100} />
         </a>
         <div id="loginBox">
           <Formik
@@ -161,9 +163,7 @@ function SignUp() {
         </div>
       </div>
       {isDesktopOrLaptop && (
-        <div id="imgBg">
-          <img src={require('../../assets/images/signup.png')} alt="signip" />
-        </div>
+        <div id="imgBg" style={{ backgroundImage: `url(${signupPic})` }} />
       )}
     </div>
   )
