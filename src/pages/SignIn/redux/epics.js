@@ -17,7 +17,10 @@ import {
   SignInRequestSuccess,
   SignUpRequest,
   SignUpRequestFailed,
-  SignUpRequestSuccess
+  SignUpRequestSuccess,
+  VerifyEmail,
+  VerifyEmailFailed,
+  VerifyEmailSuccess
 } from './actions'
 
 const signinEpic$ = action$ =>
@@ -132,9 +135,39 @@ const createPasswordEpic$ = action$ =>
     })
   )
 
+const verifyEmailEpic$ = action$ =>
+  action$.pipe(
+    ofType(VerifyEmail.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'auth/verifyEmail',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            GlobalModal.alertMessage(
+              'Information',
+              result.data.message,
+              MODAL_TYPE.NORMAL,
+              () => store.dispatch(replace('/'))
+            )
+            return VerifyEmailSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return VerifyEmailFailed.get(result)
+        }),
+        catchError(error => {
+          return VerifyEmailFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const authEpics = combineEpics(
   signinEpic$,
   signupEpic$,
   resetPasswordEpic$,
-  createPasswordEpic$
+  createPasswordEpic$,
+  verifyEmailEpic$
 )

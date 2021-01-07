@@ -16,4 +16,8 @@ export const CreatePassword = defineAction('CREATE_PASSWORD_REQUEST')
 export const CreatePasswordSuccess = defineAction('CREATE_PASSWORD_SUCCESS')
 export const CreatePasswordFailed = defineAction('CREATE_PASSWORD_FAILED')
 
+export const VerifyEmail = defineAction('VERIFY_EMAIL')
+export const VerifyEmailSuccess = defineAction('VERIFY_EMAIL_SUCCESS')
+export const VerifyEmailFailed = defineAction('VERIFY_EMAIL_FAILED')
+
 export const SignOut = defineAction('SIGNOUT_REQUEST')
