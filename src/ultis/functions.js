@@ -18,7 +18,12 @@ export const MODAL_TYPE = {
   CHOICE: 'CHOICE'
 }
 
-export const ROLES = Object.freeze({ STUDENT: 0, TEACHER: 1, ADMIN: 2 })
+export const ROLES = Object.freeze({
+  STUDENT: 0,
+  TEACHER: 1,
+  ADMIN: 2,
+  NOT_VERIFIED: 3
+})
 
 export function log(...arg) {
   if (__DEV__) {
