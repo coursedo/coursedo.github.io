@@ -59,7 +59,7 @@ function SignUp() {
       SignUpRequest.get({
         ...values,
         email: values.email.toLowerCase(),
-        role: ROLES.STUDENT
+        role: ROLES.NOT_VERIFIED
       })
     )
   }
