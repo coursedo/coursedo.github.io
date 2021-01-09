@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { useHistory } from 'react-router-dom'
+import { ROLES } from 'ultis/functions'
 import * as yup from 'yup'
 import { SignInRequest } from './redux/actions'
 import './signin.css'
@@ -19,10 +20,14 @@ function SignIn() {
 
   useEffect(() => {
     if (user) {
-      if (history.location.state) {
-        history.goBack()
+      if (user.role === ROLES.ADMIN) {
+        history.replace('/admin')
       } else {
-        history.replace('/')
+        if (history.location.state) {
+          history.goBack()
+        } else {
+          history.replace('/')
+        }
       }
     }
   }, [user])
