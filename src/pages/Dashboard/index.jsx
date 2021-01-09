@@ -58,7 +58,7 @@ function Dashboard() {
     }
   }
 
-  if (isLoadingDashboard) {
+  if (isLoadingDashboard || !user || user.role !== ROLES.ADMIN) {
     return (
       <div className="chooseContainer">
         <Spin indicator={loadingIcon} />

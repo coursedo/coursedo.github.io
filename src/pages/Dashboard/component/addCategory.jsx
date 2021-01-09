@@ -86,25 +86,27 @@ function AddCategoryModal(props) {
                   />
                 </Col>
               </Row>
-              <Row style={{ marginBottom: 32 }}>
-                <Col span={8}>Parent</Col>
-                <Col span={16}>
-                  <Select
-                    style={{ width: '100%' }}
-                    value={values.parentId}
-                    onChange={value => setFieldValue('parentId', value)}
-                  >
-                    <Option value={null}>
-                      Do not select to create parent category
-                    </Option>
-                    {realList.map(item => (
-                      <Option key={`cate${item.id}`} value={item.id}>
-                        {item.name}
+              {(!props.category || props.category?.parentId) && (
+                <Row style={{ marginBottom: 32 }}>
+                  <Col span={8}>Parent</Col>
+                  <Col span={16}>
+                    <Select
+                      style={{ width: '100%' }}
+                      value={values.parentId}
+                      onChange={value => setFieldValue('parentId', value)}
+                    >
+                      <Option value={null}>
+                        Do not select to create parent category
                       </Option>
-                    ))}
-                  </Select>
-                </Col>
-              </Row>
+                      {realList.map(item => (
+                        <Option key={`cate${item.id}`} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Col>
+                </Row>
+              )}
               <Row justify="end">
                 <Button
                   style={{ marginRight: 16 }}
