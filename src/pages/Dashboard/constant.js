@@ -1,0 +1,6 @@
+export const PAGE = {
+  CATEGORY: 'CATEGORY',
+  COURSE: 'COURSE',
+  STUDENT: 'STUDENT',
+  TEACHER: 'TEACHER'
+}

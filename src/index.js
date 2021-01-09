@@ -27,7 +27,6 @@ ReactDOM.render(
           </IconContext.Provider>
         </PersistGate>
       </ConfigProvider>
-      >
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
