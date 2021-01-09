@@ -7,6 +7,7 @@ import VerifyEmailPage from 'pages/VerifyEmail'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { history } from 'ultis/functions'
 import './App.less'
+import Dashboard from 'pages/Dashboard'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/forgot" component={ForgotPassword} />
       <Route path="/reset/:token" component={CreatePasswordPage} />
       <Route path="/verify/:token" component={VerifyEmailPage} />
+      <Route path="/admin" component={Dashboard} />
     </Router>
   )
 }
