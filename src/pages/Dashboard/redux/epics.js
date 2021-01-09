@@ -13,6 +13,12 @@ import {
   GetAllCategories,
   GetAllCategoriesFailed,
   GetAllCategoriesSuccess,
+  GetUserProfile,
+  GetUserProfileFailed,
+  GetUserProfileSuccess,
+  GetUsers,
+  GetUsersFailed,
+  GetUsersSuccess,
   UpdateCategory,
   UpdateCategoryFailed,
   UpdateCategorySuccess
@@ -110,9 +116,56 @@ const deleteCategoryEpic$ = action$ =>
     })
   )
 
+const getUsersEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetUsers.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'users',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetUsersSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return GetUsersFailed.get(result)
+        }),
+        catchError(error => {
+          return GetUsersFailed.get(error)
+        })
+      )
+    })
+  )
+
+const getUserProfileEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetUserProfile.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: `users/${action.payload}`
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetUserProfileSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return GetUserProfileFailed.get(result)
+        }),
+        catchError(error => {
+          return GetUserProfileFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const dashboardEpics = combineEpics(
   getCategoriesEpic$,
   addCategoryEpic$,
   updateCategoryEpic$,
-  deleteCategoryEpic$
+  deleteCategoryEpic$,
+  getUsersEpic$,
+  getUserProfileEpic$
 )

@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom'
 import { COLOR, ROLES } from 'ultis/functions'
 import CategoryList from './component/categoryList'
 import CoursesList from './component/coursesList'
+import StudentList from './component/studentList'
 import TeacherList from './component/teacherList'
 import { PAGE } from './constant'
 import './dashboard.css'
@@ -34,8 +35,8 @@ function Dashboard() {
 
   const currentPage = useSelector(state => state.Dashboard.currentPage)
 
-  const onMenuSelect = ({ item, key, keyPath, selectedKeys, domEvent }) => {
-    dispatch(SetCurrentPage.get({ currentPage: key }))
+  const onMenuSelect = e => {
+    dispatch(SetCurrentPage.get({ currentPage: e.key }))
   }
 
   const handleSignOut = () => {
@@ -52,7 +53,7 @@ function Dashboard() {
       case PAGE.TEACHER:
         return <TeacherList />
       case PAGE.STUDENT:
-        return <TeacherList />
+        return <StudentList />
       default:
         return <CategoryList />
     }
@@ -79,7 +80,7 @@ function Dashboard() {
           defaultSelectedKeys={[PAGE.CATEGORY]}
           selectedKeys={[currentPage]}
           mode="inline"
-          onSelect={onMenuSelect}
+          onClick={onMenuSelect}
           style={{ backgroundColor: COLOR.primary1 }}
         >
           <Menu.Item

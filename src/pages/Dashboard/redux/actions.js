@@ -17,3 +17,11 @@ export const UpdateCategoryFailed = defineAction('UPDATE_CATEGORY_FAILED')
 export const DeleteCategory = defineAction('DELETE_CATEGORY_REQUEST')
 export const DeleteCategorySuccess = defineAction('DELETE_CATEGORY_SUCCESS')
 export const DeleteCategoryFailed = defineAction('DELETE_CATEGORY_FAILED')
+
+export const GetUsers = defineAction('GET_USERS_REQUEST')
+export const GetUsersSuccess = defineAction('GET_USERS_SUCCESS')
+export const GetUsersFailed = defineAction('GET_USERS_FAILED')
+
+export const GetUserProfile = defineAction('GET_USER_PROFILE_REQUEST')
+export const GetUserProfileSuccess = defineAction('GET_USER_PROFILE_SUCCESS')
+export const GetUserProfileFailed = defineAction('GET_USER_PROFILE_FAILED')

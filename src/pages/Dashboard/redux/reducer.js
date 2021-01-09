@@ -4,6 +4,12 @@ import {
   GetAllCategories,
   GetAllCategoriesFailed,
   GetAllCategoriesSuccess,
+  GetUserProfile,
+  GetUserProfileFailed,
+  GetUserProfileSuccess,
+  GetUsers,
+  GetUsersFailed,
+  GetUsersSuccess,
   SetCurrentPage
 } from './actions'
 const initialState = {
@@ -11,7 +17,9 @@ const initialState = {
   isLoadingDashboard: false,
   currentPage: PAGE.CATEGORY,
   detailPage: null,
-  categoryList: []
+  categoryList: [],
+  userList: [],
+  userDetail: null
 }
 
 export function dashboardReducer(state = initialState, action) {
@@ -21,6 +29,18 @@ export function dashboardReducer(state = initialState, action) {
     case GetAllCategoriesSuccess.type:
       return { ...state, categoryList: action.payload, isLoading: false }
     case GetAllCategoriesFailed.type:
+      return { ...state, isLoading: false }
+    case GetUsers.type:
+      return { ...state, isLoading: true }
+    case GetUsersSuccess.type:
+      return { ...state, userList: action.payload, isLoading: false }
+    case GetUsersFailed.type:
+      return { ...state, isLoading: false }
+    case GetUserProfile.type:
+      return { ...state, isLoading: true }
+    case GetUserProfileSuccess.type:
+      return { ...state, userDetail: action.payload, isLoading: false }
+    case GetUserProfileFailed.type:
       return { ...state, isLoading: false }
     case SetCurrentPage.type:
       return {

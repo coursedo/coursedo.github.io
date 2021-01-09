@@ -1,6 +1,5 @@
 import { ConfigProvider } from 'antd'
-import viVN from 'antd/es/locale/vi_VN'
-import GlobalModal, { ModalProvider } from 'components/GlobalModal'
+import GlobalModal from 'components/GlobalModal'
 import { persistor, store } from 'core/store'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -14,7 +13,7 @@ import reportWebVitals from './reportWebVitals'
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ConfigProvider locale={viVN}>
+      <ConfigProvider>
         <PersistGate loading={null} persistor={persistor}>
           <IconContext.Provider
             value={{
