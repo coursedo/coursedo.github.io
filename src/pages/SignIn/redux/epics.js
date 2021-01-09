@@ -1,10 +1,11 @@
 import GlobalModal from 'components/GlobalModal'
 import { replace } from 'connected-react-router'
 import { store } from 'core/store'
+import { GetUsers } from 'pages/Dashboard/redux/actions'
 import { combineEpics, ofType } from 'redux-observable'
 import { catchError, exhaustMap, map } from 'rxjs/operators'
 import { request } from 'ultis/api'
-import { MODAL_TYPE } from 'ultis/functions'
+import { MODAL_TYPE, ROLES } from 'ultis/functions'
 import {
   CreatePassword,
   CreatePasswordFailed,
@@ -60,11 +61,15 @@ const signupEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 201) {
-            store.dispatch(replace('/signin', { from: '/signup' }))
-            GlobalModal.alertMessage(
-              'Information',
-              'Sign up succeed. Please sign in to continue.'
-            )
+            if (action.payload.role === ROLES.TEACHER) {
+              store.dispatch(GetUsers.get({ role: ROLES.TEACHER }))
+            } else {
+              store.dispatch(replace('/signin', { from: '/signup' }))
+              GlobalModal.alertMessage(
+                'Information',
+                'Sign up succeed. Please sign in to continue.'
+              )
+            }
             return SignUpRequestSuccess.get(result.data)
           }
           GlobalModal.alertMessage('Information', result.data?.message)

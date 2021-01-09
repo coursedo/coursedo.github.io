@@ -3,6 +3,7 @@ import { createHashHistory } from 'history'
 export const history = createHashHistory({ forceRefresh: true })
 
 export const DOMAIN = 'https://coursedo.herokuapp.com/api'
+// export const DOMAIN = 'http://localhost:3001/api'
 export const __DEV__ = false
 
 export const LIMIT_ITEMS = 12
@@ -24,6 +25,8 @@ export const ROLES = Object.freeze({
   ADMIN: 2,
   NOT_VERIFIED: 3
 })
+
+export const DEFAULT_PASSWORD = '12345678'
 
 export function log(...arg) {
   if (__DEV__) {
