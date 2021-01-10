@@ -25,6 +25,8 @@ export const ROLES = Object.freeze({
   NOT_VERIFIED: 3
 })
 
+export const DEFAULT_PASSWORD = '12345678'
+
 export function log(...arg) {
   if (__DEV__) {
     console.info(

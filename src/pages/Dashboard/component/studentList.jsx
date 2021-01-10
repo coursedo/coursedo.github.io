@@ -1,19 +1,15 @@
-import {
-  EyeOutlined,
-  LoadingOutlined,
-  PlusCircleOutlined
-} from '@ant-design/icons'
-import { Button, Space, Spin, Table, Tabs } from 'antd'
+import { EyeOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Space, Spin, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { COLOR, ROLES } from 'ultis/functions'
-import { PAGE } from '../constant'
+import { ACCOUNT_STATUS, PAGE } from '../constant'
 import '../dashboard.css'
 import { GetUserProfile, GetUsers, SetCurrentPage } from '../redux/actions'
-import AddTeacherModal from './addTeacher'
-import CoursesTab from './coursesTab'
-import ProfileTab from './profileTab'
 import { getColumnSearchProps } from './searchInput'
+import { Tabs } from 'antd'
+import ProfileTab from './profileTab'
+import CoursesTab from './coursesTab'
 
 const { TabPane } = Tabs
 
@@ -21,7 +17,7 @@ const loadingIcon = (
   <LoadingOutlined style={{ fontSize: 30, color: COLOR.primary1 }} spin />
 )
 
-function TeacherList() {
+function StudentList() {
   const userList = useSelector(state => state.Dashboard.userList)
   const isLoading = useSelector(state => state.Dashboard.isLoading)
   const detailPage = useSelector(state => state.Dashboard.detailPage)
@@ -30,25 +26,24 @@ function TeacherList() {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchColumn] = useState('')
   const refInput = useRef()
-
-  const [edit, setEdit] = useState(false)
+  const [filteredInfo, setFilterInfo] = useState(null)
 
   useEffect(() => {
-    dispatch(GetUsers.get({ role: ROLES.TEACHER }))
+    dispatch(GetUsers.get({ role: `${ROLES.STUDENT},${ROLES.NOT_VERIFIED}` }))
   }, [])
-
-  const onAddNewTeacher = () => {
-    setEdit(true)
-  }
 
   const handleView = record => {
     dispatch(GetUserProfile.get(record.id))
     dispatch(
       SetCurrentPage.get({
-        currentPage: PAGE.TEACHER,
+        currentPage: PAGE.STUDENT,
         detailPage: PAGE.PROFILE
       })
     )
+  }
+
+  const handleChange = (pagination, filters, sorter) => {
+    setFilterInfo(filters)
   }
 
   const userColumns = [
@@ -113,6 +108,23 @@ function TeacherList() {
       sorter: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber)
     },
     {
+      title: 'Status',
+      dataIndex: 'role',
+      render: (value, record, index) => {
+        switch (value) {
+          case ROLES.STUDENT:
+            return <span style={{ color: 'green' }}>{'Verified'}</span>
+          case ROLES.NOT_VERIFIED:
+            return <span style={{ color: 'red' }}>{'Not verified'}</span>
+          default:
+            return <span />
+        }
+      },
+      filters: ACCOUNT_STATUS,
+      filteredValue: filteredInfo ? filteredInfo.name : null,
+      onFilter: (value, record) => record.role === value
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (value, record) => {
@@ -147,7 +159,10 @@ function TeacherList() {
             <ProfileTab user={userDetail} />
           </TabPane>
           <TabPane tab="All courses" key="2">
-            <CoursesTab courseList={userDetail.courses} role={ROLES.TEACHER} />
+            <CoursesTab
+              courseList={userDetail.enrollment}
+              role={ROLES.STUDENT}
+            />
           </TabPane>
         </Tabs>
       </div>
@@ -155,28 +170,15 @@ function TeacherList() {
   }
 
   return (
-    <>
-      <div className="chooseContainer">
-        <span className="titleTopic">Teachers</span>
-        <Button
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          style={{ width: 200, marginBottom: 32 }}
-          onClick={() => onAddNewTeacher()}
-          size="large"
-        >
-          Add new teacher
-        </Button>
-        <Table columns={userColumns} dataSource={userList} />
-      </div>
-      <AddTeacherModal
-        visible={edit}
-        onClose={() => {
-          setEdit(false)
-        }}
+    <div className="chooseContainer">
+      <span className="titleTopic">Students</span>
+      <Table
+        columns={userColumns}
+        dataSource={userList}
+        onChange={handleChange}
       />
-    </>
+    </div>
   )
 }
 
-export default TeacherList
+export default StudentList
