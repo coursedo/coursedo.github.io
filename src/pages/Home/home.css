@@ -50,3 +50,12 @@
   top: 0;
   background-color: #ff8a00;
 }
+
+#catTitle {
+  font-family: Source Sans Pro;
+  font-size: calc(20px + 0.5vmin);
+  font-style: normal;
+  font-weight: 600;
+  color: black;
+  width: 100vh;
+}

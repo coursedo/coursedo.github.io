@@ -1,8 +1,10 @@
 import { Menu } from 'antd'
+import { useHistory } from 'react-router-dom'
 
 const SubMenu = Menu.SubMenu
 
 export const Categories = listCategories => {
+  const history = useHistory()
   return (
     <Menu style={{ width: 200 }} mode="vertical">
       {listCategories?.length > 0 ? (
@@ -16,14 +18,21 @@ export const Categories = listCategories => {
                     justifyContent: 'space-between'
                   }}
                 >
-                  <span>{item.cate}</span>
+                  <span>{item.name}</span>
                 </div>
               }
             >
-              {item.subCat?.length > 0 ? (
-                item.subCat.map(sub => {
+              {item.subCategory?.length > 0 ? (
+                item.subCategory.map(sub => {
                   return (
-                    <Menu.Item style={{ width: 200 }}>{sub?.name}</Menu.Item>
+                    <Menu.Item
+                      style={{ minWidth: 200 }}
+                      onClick={() => {
+                        history.push(`/categories/${item.id}`)
+                      }}
+                    >
+                      {sub?.name}
+                    </Menu.Item>
                   )
                 })
               ) : (

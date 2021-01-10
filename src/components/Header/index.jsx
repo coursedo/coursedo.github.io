@@ -8,28 +8,9 @@ import './header.css'
 
 const Search = Input.Search
 
-const cat = [
-  {
-    cate: 'Python',
-    subCat: [
-      {
-        name: 'Python',
-        link: '/#'
-      },
-      {
-        name: 'Python',
-        link: '/#'
-      },
-      {
-        name: 'Python',
-        link: '/#'
-      }
-    ]
-  }
-]
-
 function Header(props) {
   const user = useSelector(state => state.Auth.user)
+  const categoryList = useSelector(state => state.Dashboard.categoryList)
   const history = useHistory()
   return (
     <div id="headerView">
@@ -41,65 +22,95 @@ function Header(props) {
           alignItems: 'center'
         }}
       >
-        <span id="logoText">coursedo</span>
-        <Dropdown overlay={Categories(cat)} style={{ marginBottom: 30 }}>
-          <a id="categoriesTxt" className="ant-dropdown-link" href="#">
-            Categories
-          </a>
-        </Dropdown>
+        <span
+          id="logoText"
+          onClick={() =>
+            history.push({
+              pathname: '/',
+              state: { from: `/` }
+            })
+          }
+        >
+          coursedo
+        </span>
+        {user?.role !== 1 ? (
+          <Dropdown
+            overlay={Categories(categoryList)}
+            style={{ marginBottom: 30 }}
+          >
+            <a id="categoriesTxt" className="ant-dropdown-link" href="#">
+              Categories
+            </a>
+          </Dropdown>
+        ) : (
+          <div />
+        )}
       </div>
-      <div
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginLeft: 30,
-          marginRight: 30
-        }}
-      >
-        <Search
-          id="search"
-          placeholder="Search for Courses i.e web-development"
-          enterButton="Search"
-          size="large"
-          onSearch={value => props.onSearch(value)}
-        />
-      </div>
+      {user?.role !== 1 ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <div
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 30,
+              marginRight: 30
+            }}
+          >
+            <Search
+              id="search"
+              placeholder="Search for Courses i.e web-development"
+              enterButton="Search"
+              size="large"
+              onSearch={value => props.onSearch(value)}
+            />
+          </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'flex-end',
-          marginRight: 60
-        }}
-      >
-        <Button
-          shape="round"
-          style={{ borderWidth: 0 }}
-          id="btnTxt"
-          onClick={() =>
-            history.push({
-              pathname: '/courses',
-              state: { from: `/` }
-            })
-          }
-        >
-          Courses
-        </Button>
-        <Button
-          shape="round"
-          style={{ borderWidth: 0 }}
-          id="btnTxt"
-          onClick={() =>
-            history.push({
-              pathname: '/contact',
-              state: { from: `/` }
-            })
-          }
-        >
-          Contact Us
-        </Button>
-      </div>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              justifyContent: 'flex-end',
+              marginRight: 60
+            }}
+          >
+            <Button
+              shape="round"
+              style={{ borderWidth: 0 }}
+              id="btnTxt"
+              onClick={() =>
+                history.push({
+                  pathname: '/courses',
+                  state: { from: `/` }
+                })
+              }
+            >
+              Courses
+            </Button>
+            <Button
+              shape="round"
+              style={{ borderWidth: 0 }}
+              id="btnTxt"
+              onClick={() =>
+                history.push({
+                  pathname: '/contact',
+                  state: { from: `/` }
+                })
+              }
+            >
+              Contact Us
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div />
+      )}
       {user ? (
         user?.avatar ? (
           <Avatar size={48} src={user?.avatar} />

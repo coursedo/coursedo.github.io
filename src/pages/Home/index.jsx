@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import GlobalModal from 'components/GlobalModal'
 import Header from 'components/Header'
 import { SignOut } from 'pages/SignIn/redux/actions'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { history, MODAL_TYPE } from 'ultis/functions'
 import { useMediaQuery } from 'react-responsive'
@@ -12,10 +12,18 @@ import { courses } from './constant'
 import SwipeList from './components/swipeComponent'
 import DiscoBtn from './components/discoverBtn'
 import Footer from 'components/Footer'
+import { GetAllCategories } from 'pages/Dashboard/redux/actions'
+import { useSelector } from 'react-redux'
 
 function Home() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
+  const user = useSelector(state => state.Auth.user)
+
+  useEffect(() => {
+    dispatch(GetAllCategories.get())
+    return () => {}
+  }, [])
 
   return (
     <>
@@ -47,17 +55,21 @@ function Home() {
               Get Access to Unlimited Educational Resources. Everywhere,
               Everytime!
             </span>
-            <Button
-              style={{
-                marginTop: '1vw',
-                backgroundColor: 'white',
-                color: '#FFC000'
-              }}
-              type="primary"
-              onClick={() => history.push('/signup')}
-            >
-              Join for Free
-            </Button>
+            {user ? (
+              <div />
+            ) : (
+              <Button
+                style={{
+                  marginTop: '1vw',
+                  backgroundColor: 'white',
+                  color: '#FFC000'
+                }}
+                type="primary"
+                onClick={() => history.push('/signup')}
+              >
+                Join for Free
+              </Button>
+            )}
           </div>
         )}
       </div>

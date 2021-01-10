@@ -13,8 +13,9 @@ import { useSelector } from 'react-redux'
 const { Option } = Select
 const { SubMenu } = Menu
 
-function Courses() {
+function Search() {
   const dispatch = useDispatch()
+  const keyword = 'Keyword'
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const [current, setCurrentPage] = useState(0)
   const categoryList = useSelector(state => state.Dashboard.categoryList)
@@ -106,7 +107,7 @@ function Courses() {
         }}
       >
         <Col>
-          <h3 id="catTitle">All Courses</h3>
+          <h3 id="catTitle">{keyword}</h3>
         </Col>
 
         <Col>
@@ -221,4 +222,4 @@ function Courses() {
   )
 }
 
-export default Courses
+export default Search
