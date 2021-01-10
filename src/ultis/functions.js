@@ -3,8 +3,7 @@ import { createHashHistory } from 'history'
 export const history = createHashHistory({ forceRefresh: true })
 
 export const DOMAIN = 'https://coursedo.herokuapp.com/api'
-// export const DOMAIN = 'http://localhost:3001/api'
-export const __DEV__ = false
+export const __DEV__ = true
 
 export const LIMIT_ITEMS = 12
 export const COLOR = {

@@ -9,6 +9,9 @@ import VerifyEmailPage from 'pages/VerifyEmail'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { history } from 'ultis/functions'
 import './App.less'
+import Courses from 'pages/Courses'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
       <Route path="/verify/:token" component={VerifyEmailPage} />
       <Route path="/create" component={CreateCourse} />
       <Route path="/admin" component={Dashboard} />
+      <Route path="/courses" component={Courses} />
     </Router>
   )
 }
