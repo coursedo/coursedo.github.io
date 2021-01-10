@@ -1,12 +1,12 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Input, Popover, Menu } from 'antd'
+import { Avatar, Button, Dropdown, Input, Menu, Popover } from 'antd'
 import { Categories } from 'components/Categories'
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import './header.css'
-import { ROLES } from 'ultis/functions'
 import { SignOut } from 'pages/SignIn/redux/actions'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { ROLES } from 'ultis/functions'
+import './header.css'
 
 const Search = Input.Search
 const { SubMenu } = Menu

@@ -25,3 +25,7 @@ export const GetUsersFailed = defineAction('GET_USERS_FAILED')
 export const GetUserProfile = defineAction('GET_USER_PROFILE_REQUEST')
 export const GetUserProfileSuccess = defineAction('GET_USER_PROFILE_SUCCESS')
 export const GetUserProfileFailed = defineAction('GET_USER_PROFILE_FAILED')
+
+export const GetAllCourses = defineAction('GET_ALL_COURSES_REQUEST')
+export const GetAllCoursesSuccess = defineAction('GET_ALL_COURSES_SUCCESS')
+export const GetAllCoursesFailed = defineAction('GET_ALL_COURSES_FAILED')

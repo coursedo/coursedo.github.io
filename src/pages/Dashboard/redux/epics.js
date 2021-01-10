@@ -13,6 +13,9 @@ import {
   GetAllCategories,
   GetAllCategoriesFailed,
   GetAllCategoriesSuccess,
+  GetAllCourses,
+  GetAllCoursesFailed,
+  GetAllCoursesSuccess,
   GetUserProfile,
   GetUserProfileFailed,
   GetUserProfileSuccess,
@@ -161,11 +164,34 @@ const getUserProfileEpic$ = action$ =>
     })
   )
 
+const getCourseListEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetAllCourses.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: 'course'
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetAllCoursesSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return GetAllCoursesFailed.get(result)
+        }),
+        catchError(error => {
+          return GetAllCoursesFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const dashboardEpics = combineEpics(
   getCategoriesEpic$,
   addCategoryEpic$,
   updateCategoryEpic$,
   deleteCategoryEpic$,
   getUsersEpic$,
-  getUserProfileEpic$
+  getUserProfileEpic$,
+  getCourseListEpic$
 )

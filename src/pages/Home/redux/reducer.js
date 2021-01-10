@@ -1,53 +1,47 @@
-import { PAGE } from 'pages/Dashboard/constant'
 import { SignOut } from 'pages/SignIn/redux/actions'
 import {
-  GetAllCategories,
-  GetAllCategoriesFailed,
-  GetAllCategoriesSuccess,
-  GetUserProfile,
-  GetUserProfileFailed,
-  GetUserProfileSuccess,
-  GetUsers,
-  GetUsersFailed,
-  GetUsersSuccess,
-  SetCurrentPage
+  GetHomeCourse,
+  GetHomeCourseFailed,
+  GetHomeCourseSuccess,
+  SearchCourse,
+  SearchCourseFailed,
+  SearchCourseSuccess
 } from './actions'
 const initialState = {
   isLoading: false,
-  isLoadingDashboard: false,
-  currentPage: PAGE.CATEGORY,
-  detailPage: null,
-  categoryList: [],
-  userList: [],
-  userDetail: null
+  trending: [],
+  mostBuy: [],
+  newest: [],
+  searchCourses: [],
+  totalItems: 0
 }
 
-export function dashboardReducer(state = initialState, action) {
+export function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case GetAllCategories.type:
+    case GetHomeCourse.type:
       return { ...state, isLoading: true }
-    case GetAllCategoriesSuccess.type:
-      return { ...state, categoryList: action.payload, isLoading: false }
-    case GetAllCategoriesFailed.type:
-      return { ...state, isLoading: false }
-    case GetUsers.type:
-      return { ...state, isLoading: true }
-    case GetUsersSuccess.type:
-      return { ...state, userList: action.payload, isLoading: false }
-    case GetUsersFailed.type:
-      return { ...state, isLoading: false }
-    case GetUserProfile.type:
-      return { ...state, isLoading: true }
-    case GetUserProfileSuccess.type:
-      return { ...state, userDetail: action.payload, isLoading: false }
-    case GetUserProfileFailed.type:
-      return { ...state, isLoading: false }
-    case SetCurrentPage.type:
+    case GetHomeCourseSuccess.type:
       return {
         ...state,
-        currentPage: action.payload.currentPage,
-        detailPage: action.payload.detailPage
+        trending: action.payload.trending,
+        mostBuy: action.payload.mostBuy,
+        newest: action.payload.newest,
+        isLoading: false
       }
+    case GetHomeCourseFailed.type:
+      return { ...state, isLoading: false }
+    case SearchCourse.type:
+      return { ...state, isLoading: true }
+    case SearchCourseSuccess.type:
+      return {
+        ...state,
+        searchCourses: action.payload.results,
+        totalItems: action.payload.total,
+        isLoading: false
+      }
+    case SearchCourseFailed.type:
+      return { ...state, isLoading: false }
+
     case SignOut.type:
       return initialState
     default:
