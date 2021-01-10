@@ -1,0 +1,23 @@
+.createBg {
+  padding: calc(48px + 0.5vmin);
+  margin-top: calc(48px + 0.5vmin);
+  margin-bottom: calc(48px + 0.5vmin);
+  background: #fff7df;
+  border: 1px solid #efefef;
+  border-radius: 10px;
+}
+
+.rowCol {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+.wrapperClassName {
+  background-color: white;
+}
+
+.editorClassName {
+  max-height: calc(300px + 0.5vmin);
+}

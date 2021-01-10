@@ -4,6 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import './header.css'
 import { useHistory } from 'react-router-dom'
+import { ROLES } from 'ultis/functions'
 
 function Header(props) {
   const user = useSelector(state => state.Auth.user)
@@ -11,26 +12,37 @@ function Header(props) {
   return (
     <div id="headerView">
       <span id="logoText">coursedo</span>
-      {user ? (
-        user?.avatar ? (
-          <Avatar size={48} src={user?.avatar} />
+      <div>
+        {!(props?.from === 'addCourse') && user?.role === ROLES.TEACHER && (
+          <Button
+            type="primary"
+            style={{ borderRadius: 50, marginRight: 24 }}
+            onClick={() => history.push('/create')}
+          >
+            Add new course
+          </Button>
+        )}
+        {user ? (
+          user?.avatar ? (
+            <Avatar size={48} src={user?.avatar} />
+          ) : (
+            <Avatar size={48} icon={<UserOutlined />} />
+          )
         ) : (
-          <Avatar size={48} icon={<UserOutlined />} />
-        )
-      ) : (
-        <Button
-          type="primary"
-          style={{ borderRadius: 50 }}
-          onClick={() =>
-            history.push({
-              pathname: '/signin',
-              state: { from: `/` }
-            })
-          }
-        >
-          Sign in
-        </Button>
-      )}
+          <Button
+            type="primary"
+            style={{ borderRadius: 50 }}
+            onClick={() =>
+              history.push({
+                pathname: '/signin',
+                state: { from: `/` }
+              })
+            }
+          >
+            Sign in
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
