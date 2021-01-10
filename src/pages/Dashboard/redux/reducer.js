@@ -4,6 +4,9 @@ import {
   GetAllCategories,
   GetAllCategoriesFailed,
   GetAllCategoriesSuccess,
+  GetAllCourses,
+  GetAllCoursesFailed,
+  GetAllCoursesSuccess,
   GetUserProfile,
   GetUserProfileFailed,
   GetUserProfileSuccess,
@@ -19,7 +22,8 @@ const initialState = {
   detailPage: null,
   categoryList: [],
   userList: [],
-  userDetail: null
+  userDetail: null,
+  courseList: []
 }
 
 export function dashboardReducer(state = initialState, action) {
@@ -41,6 +45,12 @@ export function dashboardReducer(state = initialState, action) {
     case GetUserProfileSuccess.type:
       return { ...state, userDetail: action.payload, isLoading: false }
     case GetUserProfileFailed.type:
+      return { ...state, isLoading: false }
+    case GetAllCourses.type:
+      return { ...state, isLoading: true }
+    case GetAllCoursesSuccess.type:
+      return { ...state, courseList: action.payload, isLoading: false }
+    case GetAllCoursesFailed.type:
       return { ...state, isLoading: false }
     case SetCurrentPage.type:
       return {

@@ -1,13 +1,11 @@
-import {
-  DeleteOutlined,
-  LoadingOutlined,
-  PlusCircleOutlined
-} from '@ant-design/icons'
-import { Button, Modal, Space, Spin, Table } from 'antd'
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Modal, Space, Spin, Table } from 'antd'
+import Avatar from 'antd/lib/avatar/avatar'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { COLOR } from 'ultis/functions'
 import '../dashboard.css'
+import { GetAllCourses } from '../redux/actions'
 import { getColumnSearchProps } from './searchInput'
 
 const loadingIcon = (
@@ -15,46 +13,22 @@ const loadingIcon = (
 )
 
 function CoursesList() {
-  const categoryList = useSelector(state => state.Dashboard.categoryList)
+  const courseList = useSelector(state => state.Dashboard.courseList)
   const isLoading = useSelector(state => state.Dashboard.isLoading)
   const dispatch = useDispatch()
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchColumn] = useState('')
   const refInput = useRef()
-  let realList = []
-  categoryList.forEach(item => {
-    realList.push({
-      name: item.name,
-      parent: null,
-      id: item.id,
-      parentId: item.parentId
-    })
-    item?.subCategory &&
-      item?.subCategory.length > 0 &&
-      item?.subCategory.forEach(subCat => {
-        realList.push({
-          name: subCat.name,
-          parent: item.name,
-          id: subCat.id,
-          parentId: subCat.parentId
-        })
-      })
-  })
-  const [edit, setEdit] = useState({ isShow: false, category: null })
 
   useEffect(() => {
-    // dispatch(GetAllCategories.get())
+    dispatch(GetAllCourses.get())
   }, [])
-
-  const onAddNewCategory = () => {
-    setEdit({ isShow: true, category: null })
-  }
 
   const handleDelete = record => {
     Modal.confirm({
       title: 'Confirm',
       icon: <DeleteOutlined style={{ color: COLOR.primary1 }} />,
-      content: 'Do you confirm to delete this category?',
+      content: 'Do you confirm to delete this course?',
       okText: 'Confirm',
       cancelText: 'Cancel',
       centered: true,
@@ -66,47 +40,82 @@ function CoursesList() {
     })
   }
 
-  const categoryColumns = [
+  const courseColumns = [
     {
       ...getColumnSearchProps(
         'name',
-        'Enter title to find',
+        'Enter name to find',
         searchText,
         setSearchText,
         searchedColumn,
         setSearchColumn,
         refInput
       ),
-      title: 'Title',
+      title: 'Course',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name)
-    },
-    {
-      ...getColumnSearchProps(
-        'parent',
-        'Enter title to find',
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchColumn,
-        refInput
-      ),
-      title: 'Parent',
-      dataIndex: 'parent',
-      key: 'parent',
-      sorter: (a, b) => a.parent.localeCompare(b.parent)
-    },
-    {
-      title: 'Action',
-      key: 'action',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (value, record) => {
         return (
           <Space>
-            <DeleteOutlined
-              style={{ fontSize: 20, color: '#FF0000' }}
-              onClick={() => handleDelete(record)}
-            />
+            <Avatar shape="square" size={56} src={record?.thumbnail} />
+            <span>{value}</span>
+          </Space>
+        )
+      }
+    },
+    {
+      ...getColumnSearchProps(
+        'category',
+        'Enter category to find',
+        searchText,
+        setSearchText,
+        searchedColumn,
+        setSearchColumn,
+        refInput
+      ),
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      sorter: (a, b) => a.category.localeCompare(b.category)
+    },
+    {
+      title: 'Total enrollment',
+      dataIndex: 'enrollCount',
+      key: 'enrollCount',
+      sorter: (a, b) => Number(a.enrollCount) > Number(b.enrollCount)
+    },
+    {
+      title: 'Rating',
+      dataIndex: 'rating',
+      key: 'rating',
+      sorter: (a, b) => a.rating > b.rating
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      sorter: (a, b) => a.price > b.price
+    },
+    {
+      ...getColumnSearchProps(
+        'teacherName',
+        'Enter teacher name to find',
+        searchText,
+        setSearchText,
+        searchedColumn,
+        setSearchColumn,
+        refInput
+      ),
+      title: 'Teacher',
+      dataIndex: 'teacherName',
+      key: 'teacherName',
+      sorter: (a, b) => a.teacherName.localeCompare(b.teacherName),
+      render: (value, record) => {
+        return (
+          <Space>
+            <Avatar size={56} src={record?.teacherAvatar} />
+            <span>{value}</span>
           </Space>
         )
       }
@@ -124,17 +133,8 @@ function CoursesList() {
   return (
     <>
       <div className="chooseContainer">
-        <span className="titleTopic">Categories</span>
-        <Button
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          style={{ width: 200, marginBottom: 32 }}
-          onClick={() => onAddNewCategory()}
-          size="large"
-        >
-          Add new category
-        </Button>
-        <Table columns={categoryColumns} dataSource={realList} />
+        <span className="titleTopic">Courses</span>
+        <Table columns={courseColumns} dataSource={courseList} />
       </div>
     </>
   )
