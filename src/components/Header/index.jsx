@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom'
 import './header.css'
 
 const Search = Input.Search
+import { ROLES } from 'ultis/functions'
 
 function Header(props) {
   const user = useSelector(state => state.Auth.user)
@@ -111,26 +112,33 @@ function Header(props) {
       ) : (
         <div />
       )}
+      {!(props?.from === 'addCourse') && user?.role === ROLES.TEACHER && (
+          <Button
+            type="primary"
+            style={{ borderRadius: 50, marginRight: 24 }}
+            onClick={() => history.push('/create')}
+          >
+            Add new course
+          </Button>
+        )}
       {user ? (
         user?.avatar ? (
           <Avatar size={48} src={user?.avatar} />
         ) : (
-          <Avatar size={48} icon={<UserOutlined />} />
-        )
-      ) : (
-        <Button
-          type="primary"
-          style={{ borderRadius: 50 }}
-          onClick={() =>
-            history.push({
-              pathname: '/signin',
-              state: { from: `/` }
-            })
-          }
-        >
-          Sign in
-        </Button>
-      )}
+          <Button
+            type="primary"
+            style={{ borderRadius: 50 }}
+            onClick={() =>
+              history.push({
+                pathname: '/signin',
+                state: { from: `/` }
+              })
+            }
+          >
+            Sign in
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
