@@ -6,7 +6,7 @@ const SubMenu = Menu.SubMenu
 export const Categories = listCategories => {
   const history = useHistory()
   return (
-    <Menu style={{ width: 200 }} mode="vertical">
+    <Menu style={{ width: 256 }} mode="vertical">
       {listCategories?.length > 0 ? (
         listCategories.map(item => {
           return (

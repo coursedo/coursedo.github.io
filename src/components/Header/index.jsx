@@ -1,18 +1,88 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Input } from 'antd'
+import { Avatar, Button, Dropdown, Input, Popover, Menu } from 'antd'
 import { Categories } from 'components/Categories'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import './header.css'
+import { ROLES } from 'ultis/functions'
+import { SignOut } from 'pages/SignIn/redux/actions'
 
 const Search = Input.Search
-import { ROLES } from 'ultis/functions'
+const { SubMenu } = Menu
 
 function Header(props) {
   const user = useSelector(state => state.Auth.user)
   const categoryList = useSelector(state => state.Dashboard.categoryList)
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  const studentPopover = (
+    <Menu style={{ width: 200 }}>
+      <Menu.Item
+        key={'profile'}
+        onClick={() => {
+          history.push(`/profile`)
+        }}
+      >
+        Profile
+      </Menu.Item>
+      <Menu.Item
+        key={'course'}
+        onClick={() => {
+          history.push(`/my-courses`)
+        }}
+      >
+        My courses
+      </Menu.Item>
+      <Menu.Item
+        key={'changePass'}
+        onClick={() => {
+          history.push(`/change-password`)
+        }}
+      >
+        Change Password
+      </Menu.Item>
+      <Menu.Item
+        key={'logout'}
+        onClick={() => {
+          dispatch(SignOut.get())
+        }}
+      >
+        Log Out
+      </Menu.Item>
+    </Menu>
+  )
+
+  const teacherPopover = (
+    <Menu style={{ width: 200 }}>
+      <Menu.Item
+        key={'profile'}
+        onClick={() => {
+          history.push(`/profile`)
+        }}
+      >
+        Profile
+      </Menu.Item>
+      <Menu.Item
+        key={'changePass'}
+        onClick={() => {
+          history.push(`/change-password`)
+        }}
+      >
+        Change Password
+      </Menu.Item>
+      <Menu.Item
+        key={'logout'}
+        onClick={() => {
+          dispatch(SignOut.get())
+        }}
+      >
+        Log Out
+      </Menu.Item>
+    </Menu>
+  )
+
   return (
     <div id="headerView">
       <div
@@ -65,7 +135,7 @@ function Header(props) {
             }}
           >
             <Search
-              id="search"
+              style={{ width: '30vw' }}
               placeholder="Search for Courses i.e web-development"
               enterButton="Search"
               size="large"
@@ -123,23 +193,39 @@ function Header(props) {
       )}
       {user ? (
         user?.avatar ? (
-          <Avatar size={48} src={user?.avatar} />
-        ) : (
-          <Button
-            type="primary"
-            style={{ borderRadius: 50 }}
-            onClick={() =>
-              history.push({
-                pathname: '/signin',
-                state: { from: `/` }
-              })
+          <Popover
+            placement="bottomRight"
+            content={
+              user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
             }
+            trigger="click"
           >
-            Sign in
-          </Button>
+            <Avatar size={48} src={user?.avatar} />
+          </Popover>
+        ) : (
+          <Popover
+            placement="bottomRight"
+            content={
+              user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
+            }
+            trigger="click"
+          >
+            <Avatar size={48} icon={<UserOutlined />} />
+          </Popover>
         )
       ) : (
-        <div />
+        <Button
+          type="primary"
+          style={{ borderRadius: 50 }}
+          onClick={() =>
+            history.push({
+              pathname: '/signin',
+              state: { from: `/` }
+            })
+          }
+        >
+          Sign in
+        </Button>
       )}
     </div>
   )
