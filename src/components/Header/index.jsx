@@ -113,14 +113,14 @@ function Header(props) {
         <div />
       )}
       {!(props?.from === 'addCourse') && user?.role === ROLES.TEACHER && (
-          <Button
-            type="primary"
-            style={{ borderRadius: 50, marginRight: 24 }}
-            onClick={() => history.push('/create')}
-          >
-            Add new course
-          </Button>
-        )}
+        <Button
+          type="primary"
+          style={{ borderRadius: 50, marginRight: 24 }}
+          onClick={() => history.push('/create')}
+        >
+          Add new course
+        </Button>
+      )}
       {user ? (
         user?.avatar ? (
           <Avatar size={48} src={user?.avatar} />
@@ -137,8 +137,10 @@ function Header(props) {
           >
             Sign in
           </Button>
-        )}
-      </div>
+        )
+      ) : (
+        <div />
+      )}
     </div>
   )
 }
