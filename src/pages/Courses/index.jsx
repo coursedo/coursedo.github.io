@@ -46,7 +46,7 @@ function Courses() {
                   color: '#FFC000'
                 }}
                 type="primary"
-                onClick={() => history.push('/forgot')}
+                onClick={() => history.push('/signup')}
               >
                 Join for Free
               </Button>
