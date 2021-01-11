@@ -10,6 +10,9 @@ import {
   DeleteCategory,
   DeleteCategoryFailed,
   DeleteCategorySuccess,
+  DeleteCourse,
+  DeleteCourseFailed,
+  DeleteCourseSuccess,
   GetAllCategories,
   GetAllCategoriesFailed,
   GetAllCategoriesSuccess,
@@ -119,6 +122,29 @@ const deleteCategoryEpic$ = action$ =>
     })
   )
 
+const deleteCourseEpic$ = action$ =>
+  action$.pipe(
+    ofType(DeleteCourse.type),
+    exhaustMap(action => {
+      return request({
+        method: 'DELETE',
+        url: `course/${action.payload}`
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            store.dispatch(GetAllCourses.get())
+            return DeleteCourseSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return DeleteCourseFailed.get(result)
+        }),
+        catchError(error => {
+          return DeleteCourseFailed.get(error)
+        })
+      )
+    })
+  )
+
 const getUsersEpic$ = action$ =>
   action$.pipe(
     ofType(GetUsers.type),
@@ -193,5 +219,6 @@ export const dashboardEpics = combineEpics(
   deleteCategoryEpic$,
   getUsersEpic$,
   getUserProfileEpic$,
-  getCourseListEpic$
+  getCourseListEpic$,
+  deleteCourseEpic$
 )
