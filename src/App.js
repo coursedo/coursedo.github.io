@@ -12,6 +12,7 @@ import './App.less'
 import Courses from 'pages/Courses'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Profile from 'pages/Profile'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Route path="/create" component={CreateCourse} />
       <Route path="/admin" component={Dashboard} />
       <Route path="/courses" component={Courses} />
+      <Route path="/profile" component={Profile} />
     </Router>
   )
 }

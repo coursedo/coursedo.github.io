@@ -24,7 +24,7 @@ function Home() {
 
   return (
     <>
-      <Header />
+      <Header onSearch={val => console.info('keyword', val)} />
       <div
         style={{
           display: 'flex',
