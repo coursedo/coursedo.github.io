@@ -36,14 +36,6 @@ function Header(props) {
         My courses
       </Menu.Item>
       <Menu.Item
-        key={'changePass'}
-        onClick={() => {
-          history.push(`/change-password`)
-        }}
-      >
-        Change Password
-      </Menu.Item>
-      <Menu.Item
         key={'logout'}
         onClick={() => {
           dispatch(SignOut.get())
@@ -63,14 +55,6 @@ function Header(props) {
         }}
       >
         Profile
-      </Menu.Item>
-      <Menu.Item
-        key={'changePass'}
-        onClick={() => {
-          history.push(`/change-password`)
-        }}
-      >
-        Change Password
       </Menu.Item>
       <Menu.Item
         key={'logout'}

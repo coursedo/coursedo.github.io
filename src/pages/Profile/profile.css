@@ -1,0 +1,14 @@
+/* .inputBox {
+  height: calc(48px + 0.5vmin);
+  border: 1px solid #efefef;
+  border-radius: 50%;
+  background-color: #ffffff;
+  margin-bottom: 24px;
+} */
+
+.chooseContainer {
+  display: flex;
+  flex: 5;
+  flex-direction: column;
+  padding: calc(28px + 1vmin);
+}
