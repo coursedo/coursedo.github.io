@@ -7,6 +7,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { history } from 'ultis/functions'
+import '../../components/Header/header.css'
 import DiscoBtn from './components/discoverBtn'
 import SwipeList from './components/swipeComponent'
 import { courses } from './constant'
@@ -23,7 +24,7 @@ function Home() {
   }, [])
 
   return (
-    <>
+    <div className="main">
       <Header onSearch={val => console.info('keyword', val)} />
       <div
         style={{
@@ -58,28 +59,32 @@ function Home() {
           </div>
         )}
       </div>
-      <div id="swipe">
-        <p id="type">Trending Courses</p>
-        <SwipeList list={courses} type={'courses'} />
-        <DiscoBtn onClick={() => history.push('/courses')} />
-      </div>
-      <div id="swipe">
-        <p id="type">Most Popular Courses</p>
-        <SwipeList list={courses} type={'courses'} />
-        <DiscoBtn onClick={() => history.push('/courses')} />
-      </div>
-      <div id="swipe">
-        <p id="type">Newest Courses</p>
-        <SwipeList list={courses} type={'courses'} />
-        <DiscoBtn onClick={() => history.push('/courses')} />
-      </div>
-      <div id="swipe">
-        <p id="type">Top categories</p>
-        <SwipeList list={courses} type={'category'} />
-        <DiscoBtn onClick={() => history.push('/categories')} />
+
+      <div className="container-fluid">
+        <div id="swipe">
+          <p id="type">Trending Courses</p>
+          <SwipeList list={courses} type={'courses'} />
+          <DiscoBtn onClick={() => history.push('/courses')} />
+        </div>
+
+        <div id="swipe">
+          <p id="type">Most Popular Courses</p>
+          <SwipeList list={courses} type={'courses'} />
+          <DiscoBtn onClick={() => history.push('/courses')} />
+        </div>
+        <div id="swipe">
+          <p id="type">Newest Courses</p>
+          <SwipeList list={courses} type={'courses'} />
+          <DiscoBtn onClick={() => history.push('/courses')} />
+        </div>
+        <div id="swipe">
+          <p id="type">Top categories</p>
+          <SwipeList list={courses} type={'category'} />
+          <DiscoBtn onClick={() => history.push('/categories')} />
+        </div>
       </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

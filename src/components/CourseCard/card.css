@@ -81,6 +81,10 @@
   border-radius: 20px;
 }
 
+.blur {
+  filter: blur(2px);
+}
+
 #card {
   background-image: linear-gradient(to right, #ff8a00, #ffc000);
   border-bottom-left-radius: 20px;

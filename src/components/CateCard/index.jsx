@@ -13,7 +13,7 @@ function CateCard(props) {
       }}
     >
       <div
-        className="container"
+        className="container blur"
         style={{
           backgroundImage: `url(${
             props.img ? props.img : 'https://source.unsplash.com/random'

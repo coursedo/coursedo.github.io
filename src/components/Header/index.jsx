@@ -1,21 +1,43 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Input, Menu, Popover } from 'antd'
+
 import { Categories } from 'components/Categories'
 import { SignOut } from 'pages/SignIn/redux/actions'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ROLES } from 'ultis/functions'
-import './header.css'
+import React, { useState } from 'react'
 
-const Search = Input.Search
+import {
+  Anchor,
+  Drawer,
+  Button,
+  Input,
+  Avatar,
+  Dropdown,
+  Menu,
+  Popover
+} from 'antd'
+import { MenuOutlined } from '@ant-design/icons'
+const { Search } = Input
+const { Link } = Anchor
+
 const { SubMenu } = Menu
 
-function Header(props) {
+function AppHeader(props) {
+  const [visible, setVisible] = useState(false)
+  const history = useHistory()
   const user = useSelector(state => state.Auth.user)
   const categoryList = useSelector(state => state.Dashboard.categoryList)
-  const history = useHistory()
   const dispatch = useDispatch()
+
+  const showDrawer = () => {
+    console.info('show')
+    setVisible(true)
+  }
+
+  const onClose = () => {
+    setVisible(false)
+  }
 
   const studentPopover = (
     <Menu style={{ width: 200 }}>
@@ -68,151 +90,211 @@ function Header(props) {
   )
 
   return (
-    <div id="headerView">
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'center'
-        }}
-      >
-        <span
-          id="logoText"
-          onClick={() =>
-            history.push({
-              pathname: '/',
-              state: { from: `/` }
-            })
-          }
-        >
-          coursedo
-        </span>
-        {user?.role !== 1 ? (
-          <Dropdown
-            overlay={Categories(categoryList)}
-            style={{ marginBottom: 30 }}
-          >
-            <a id="categoriesTxt" className="ant-dropdown-link" href="#">
-              Categories
-            </a>
-          </Dropdown>
-        ) : (
-          <div />
-        )}
-      </div>
-      {user?.role !== 1 ? (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <div
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: 30,
-              marginRight: 30
-            }}
-          >
-            <Search
-              style={{ width: '30vw' }}
-              placeholder="Search for Courses i.e web-development"
-              enterButton="Search"
-              size="large"
-              onSearch={value => props.onSearch(value)}
-            />
+    <div className="container-fluid">
+      <div className="header">
+        <div style={{ display: 'flex' }}>
+          <div id="logo">
+            <span
+              id="logoText"
+              onClick={() =>
+                history.push({
+                  pathname: '/',
+                  state: { from: `/` }
+                })
+              }
+            >
+              coursedo
+            </span>
           </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flex: 1,
-              justifyContent: 'flex-end',
-              marginRight: 60
-            }}
-          >
-            <Button
-              shape="round"
-              style={{ borderWidth: 0 }}
-              id="btnTxt"
-              onClick={() =>
-                history.push({
-                  pathname: '/courses',
-                  state: { from: `/` }
-                })
-              }
-            >
-              Courses
-            </Button>
-            <Button
-              shape="round"
-              style={{ borderWidth: 0 }}
-              id="btnTxt"
-              onClick={() =>
-                history.push({
-                  pathname: '/contact',
-                  state: { from: `/` }
-                })
-              }
-            >
-              Contact Us
-            </Button>
+          <div>
+            {user?.role !== 1 ? (
+              <Dropdown
+                overlay={Categories(categoryList)}
+                style={{ marginBottom: 30 }}
+              >
+                <a id="categoriesTxt" className="ant-dropdown-link" href="#">
+                  Categories
+                </a>
+              </Dropdown>
+            ) : (
+              <div />
+            )}
           </div>
         </div>
-      ) : (
-        <div />
-      )}
-      {!(props?.from === 'addCourse') && user?.role === ROLES.TEACHER && (
-        <Button
-          type="primary"
-          style={{ borderRadius: 50, marginRight: 24 }}
-          onClick={() => history.push('/create')}
-        >
-          Add new course
-        </Button>
-      )}
-      {user ? (
-        user?.avatar ? (
-          <Popover
-            placement="bottomRight"
-            content={
-              user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
-            }
-            trigger="click"
+        <div className="mobileHidden">
+          {!(props?.from === 'addCourse') && user?.role === ROLES.TEACHER && (
+            <Button
+              type="primary"
+              style={{ borderRadius: 50, marginRight: 24 }}
+              onClick={() => history.push('/create')}
+            >
+              Add new course
+            </Button>
+          )}
+          {user?.role !== 1 ? (
+            <div>
+              <Search
+                style={{ width: '30vw' }}
+                placeholder="Search for Courses i.e web-development"
+                enterButton="Search"
+                size="large"
+                onSearch={value => props.onSearch(value)}
+              />
+              <Button
+                shape="round"
+                style={{ borderWidth: 0 }}
+                id="btnTxt"
+                onClick={() =>
+                  history.push({
+                    pathname: '/courses',
+                    state: { from: `/` }
+                  })
+                }
+              >
+                Courses
+              </Button>
+              <Button
+                shape="round"
+                style={{ borderWidth: 0, marginRight: 30 }}
+                id="btnTxt"
+                onClick={() =>
+                  history.push({
+                    pathname: '/about',
+                    state: { from: `/` }
+                  })
+                }
+              >
+                About
+              </Button>
+            </div>
+          ) : (
+            <div />
+          )}
+
+          {user ? (
+            user?.avatar ? (
+              <Popover
+                placement="bottomRight"
+                content={
+                  user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
+                }
+                trigger="click"
+              >
+                <Avatar size={48} src={user?.avatar} />
+              </Popover>
+            ) : (
+              <Popover
+                placement="bottomRight"
+                content={
+                  user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
+                }
+                trigger="click"
+              >
+                <Avatar size={48} icon={<UserOutlined />} />
+              </Popover>
+            )
+          ) : (
+            <Button
+              type="primary"
+              style={{ borderRadius: 50 }}
+              onClick={() =>
+                history.push({
+                  pathname: '/signin',
+                  state: { from: `/` }
+                })
+              }
+            >
+              Sign in
+            </Button>
+          )}
+        </div>
+        <div className="mobileVisible">
+          <Button type="primary" onClick={showDrawer}>
+            <MenuOutlined />
+          </Button>
+          <Drawer
+            placement="right"
+            closable={false}
+            onClose={onClose}
+            visible={visible}
           >
-            <Avatar size={48} src={user?.avatar} />
-          </Popover>
-        ) : (
-          <Popover
-            placement="bottomRight"
-            content={
-              user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
-            }
-            trigger="click"
-          >
-            <Avatar size={48} icon={<UserOutlined />} />
-          </Popover>
-        )
-      ) : (
-        <Button
-          type="primary"
-          style={{ borderRadius: 50 }}
-          onClick={() =>
-            history.push({
-              pathname: '/signin',
-              state: { from: `/` }
-            })
-          }
-        >
-          Sign in
-        </Button>
-      )}
+            <Anchor targetOffset="65">
+              {user?.role !== 1 ? (
+                <Search
+                  allowClear
+                  placeholder="Search for Courses i.e web-development"
+                  onSearch={value => props.onSearch(value)}
+                  enterButton={'Search'}
+                />
+              ) : (
+                <div />
+              )}
+              {user ? (
+                <Popover
+                  placement="bottomRight"
+                  content={
+                    user?.role === ROLES.TEACHER
+                      ? teacherPopover
+                      : studentPopover
+                  }
+                  trigger="click"
+                >
+                  <p
+                    className="ant-anchor-link"
+                    style={{
+                      fontFamily: 'Source Sans Pro',
+                      fontWeight: 'bold',
+                      paddingTop: 10
+                    }}
+                  >
+                    {user.fullName}
+                  </p>
+                </Popover>
+              ) : (
+                <div />
+              )}
+              {user?.role !== 1 ? (
+                <div>
+                  <Link href="#courses" title="Courses" />
+                  <Link href="#about" title="About" />
+                </div>
+              ) : (
+                <div />
+              )}
+              {!(props?.from === 'addCourse') &&
+                user?.role === ROLES.TEACHER && (
+                  <Link href="#create" title="Add new course" />
+                )}
+              {!user ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Button
+                    type="primary"
+                    style={{ borderRadius: 50, width: '80%', marginBlock: 10 }}
+                    onClick={() =>
+                      history.push({
+                        pathname: '/signin',
+                        state: { from: `/` }
+                      })
+                    }
+                  >
+                    Sign in
+                  </Button>
+                </div>
+              ) : (
+                <div />
+              )}
+            </Anchor>
+          </Drawer>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default Header
+export default AppHeader

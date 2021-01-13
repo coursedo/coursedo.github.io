@@ -10,16 +10,16 @@ function SwipeList(props) {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: 30,
+    centerPadding: 10,
     responsive: [
       {
         breakpoint: 1500,
         settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
+          slidesToShow: 3,
+          slidesToScroll: 3,
           infinite: true,
           dots: true
         }
