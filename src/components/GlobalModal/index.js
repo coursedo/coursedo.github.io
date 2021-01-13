@@ -73,7 +73,7 @@ export default class GlobalModal extends React.Component {
                   onClick={GlobalModal.instance.handleCancel}
                   size="large"
                 >
-                  Hủy
+                  Cancel
                 </Button>,
                 <Button
                   key="okButton"

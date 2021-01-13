@@ -33,6 +33,14 @@ function Dashboard() {
     }
   }, [user])
 
+  useEffect(() => {
+    return () => {
+      if (history.action === 'POP') {
+        dispatch(SignOut.get())
+      }
+    }
+  }, [history])
+
   const currentPage = useSelector(state => state.Dashboard.currentPage)
 
   const onMenuSelect = e => {

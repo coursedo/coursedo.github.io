@@ -1,18 +1,19 @@
+import Courses from 'pages/Courses'
 import CreateCourse from 'pages/CreateCourse'
 import CreatePasswordPage from 'pages/CreatePassword'
 import Dashboard from 'pages/Dashboard'
+import EditCourse from 'pages/EditCourse'
 import ForgotPassword from 'pages/ForgotPassword'
 import Home from 'pages/Home'
+import Profile from 'pages/Profile'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import VerifyEmailPage from 'pages/VerifyEmail'
 import { HashRouter as Router, Route } from 'react-router-dom'
+import 'slick-carousel/slick/slick-theme.css'
+import 'slick-carousel/slick/slick.css'
 import { history } from 'ultis/functions'
 import './App.less'
-import Courses from 'pages/Courses'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Profile from 'pages/Profile'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
       <Route path="/admin" component={Dashboard} />
       <Route path="/courses" component={Courses} />
       <Route path="/profile" component={Profile} />
+      <Route path="/course/:courseId/edit" component={EditCourse} />
     </Router>
   )
 }

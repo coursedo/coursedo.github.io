@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { COLOR } from 'ultis/functions'
 import '../dashboard.css'
-import { GetAllCourses } from '../redux/actions'
+import { DeleteCourse, GetAllCourses } from '../redux/actions'
 import { getColumnSearchProps } from './searchInput'
 
 const loadingIcon = (
@@ -28,13 +28,13 @@ function CoursesList() {
     Modal.confirm({
       title: 'Confirm',
       icon: <DeleteOutlined style={{ color: COLOR.primary1 }} />,
-      content: 'Do you confirm to delete this course?',
+      content: `Do you confirm to delete ${record.name}?`,
       okText: 'Confirm',
       cancelText: 'Cancel',
       centered: true,
       okButtonProps: { style: { backgroundColor: COLOR.primary1 } },
       onOk: () => {
-        // dispatch(DeleteCategory.get(record.id))
+        dispatch(DeleteCourse.get(record.id))
         Modal.destroyAll()
       }
     })
@@ -116,6 +116,20 @@ function CoursesList() {
           <Space>
             <Avatar size={56} src={record?.teacherAvatar} />
             <span>{value}</span>
+          </Space>
+        )
+      }
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (value, record) => {
+        return (
+          <Space>
+            <DeleteOutlined
+              style={{ fontSize: 20, color: '#FF0000' }}
+              onClick={() => handleDelete(record)}
+            />
           </Space>
         )
       }

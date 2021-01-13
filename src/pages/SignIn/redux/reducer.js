@@ -1,8 +1,22 @@
-import { SignInRequestSuccess, SignOut } from './actions'
+import {
+  ChangePassword,
+  ChangePasswordFailed,
+  ChangePasswordSuccess,
+  GetProfile,
+  GetProfileFailed,
+  GetProfileSuccess,
+  SignInRequestSuccess,
+  SignOut,
+  UpdateProfile,
+  UpdateProfileFailed,
+  UpdateProfileSuccess
+} from './actions'
 const initialState = {
   token: null,
   refreshToken: null,
-  user: null
+  user: null,
+  isLoading: false,
+  isLoadingProfile: false
 }
 
 export function authReducer(state = initialState, action) {
@@ -14,6 +28,28 @@ export function authReducer(state = initialState, action) {
         refreshToken: action.payload.refreshToken,
         user: action.payload
       }
+    case UpdateProfile.type:
+      return { ...state, isLoading: true }
+    case UpdateProfileSuccess.type:
+      return { ...state, isLoading: false }
+    case UpdateProfileFailed.type:
+      return { ...state, isLoading: false }
+    case GetProfile.type:
+      return { ...state, isLoadingProfile: true }
+    case GetProfileSuccess.type:
+      return {
+        ...state,
+        user: { ...state.user, ...action.payload },
+        isLoadingProfile: false
+      }
+    case GetProfileFailed.type:
+      return { ...state, isLoadingProfile: false }
+    case ChangePassword.type:
+      return { ...state, isLoading: true }
+    case ChangePasswordSuccess.type:
+      return { ...state, isLoading: false }
+    case ChangePasswordFailed.type:
+      return { ...state, isLoading: false }
     case SignOut.type:
       return initialState
     default:

@@ -29,3 +29,7 @@ export const GetUserProfileFailed = defineAction('GET_USER_PROFILE_FAILED')
 export const GetAllCourses = defineAction('GET_ALL_COURSES_REQUEST')
 export const GetAllCoursesSuccess = defineAction('GET_ALL_COURSES_SUCCESS')
 export const GetAllCoursesFailed = defineAction('GET_ALL_COURSES_FAILED')
+
+export const DeleteCourse = defineAction('DELETE_COURSE_REQUEST')
+export const DeleteCourseSuccess = defineAction('DELETE_COURSE_SUCCESS')
+export const DeleteCourseFailed = defineAction('DELETE_COURSE_FAILED')
