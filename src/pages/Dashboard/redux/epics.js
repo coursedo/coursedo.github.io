@@ -170,11 +170,32 @@ const getCourseListEpic$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'GET',
-        url: 'course'
+        url: `course?${
+          action.payload.keyword
+            ? 'keyword=' + action.payload.keyword + '&'
+            : ''
+        }${action.payload.page ? 'page=' + action.payload.page + '&' : ''}${
+          action.payload.limit ? 'limit=' + action.payload.limit + '&' : ''
+        }${
+          action.payload.category
+            ? 'category=' + action.payload.category + '&'
+            : ''
+        }${
+          action.payload.sortOrder
+            ? 'sortOrder=' + action.payload.sortOrder + '&'
+            : ''
+        }${action.payload.sort ? 'sort=' + action.payload.sort + '&' : ''}${
+          action.payload.priceRange
+            ? 'priceRange=' + action.payload.priceRange
+            : ''
+        }`
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            return GetAllCoursesSuccess.get(result.data)
+            return GetAllCoursesSuccess.get({
+              ...result.data,
+              page: action.payload.page || null
+            })
           }
           GlobalModal.alertMessage('Information', result.data?.message)
           return GetAllCoursesFailed.get(result)

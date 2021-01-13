@@ -12,14 +12,17 @@ import DiscoBtn from './components/discoverBtn'
 import SwipeList from './components/swipeComponent'
 import { courses } from './constant'
 import './home.css'
+import { GetHomeCourse } from './redux/actions'
 
 function Home() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const user = useSelector(state => state.Auth.user)
+  const {trending, mostBuy, newest} = useSelector(state => state.Home)
 
   useEffect(() => {
     dispatch(GetAllCategories.get())
+    dispatch(GetHomeCourse.get())
     return () => {}
   }, [])
 
@@ -63,18 +66,18 @@ function Home() {
       <div className="container-fluid">
         <div id="swipe">
           <p id="type">Trending Courses</p>
-          <SwipeList list={courses} type={'courses'} />
+          <SwipeList list={trending} type={'courses'} />
           <DiscoBtn onClick={() => history.push('/courses')} />
         </div>
 
         <div id="swipe">
           <p id="type">Most Popular Courses</p>
-          <SwipeList list={courses} type={'courses'} />
+          <SwipeList list={mostBuy} type={'courses'} />
           <DiscoBtn onClick={() => history.push('/courses')} />
         </div>
         <div id="swipe">
           <p id="type">Newest Courses</p>
-          <SwipeList list={courses} type={'courses'} />
+          <SwipeList list={newest} type={'courses'} />
           <DiscoBtn onClick={() => history.push('/courses')} />
         </div>
         <div id="swipe">

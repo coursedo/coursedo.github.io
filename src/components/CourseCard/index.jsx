@@ -1,9 +1,12 @@
 import { Badge, Rate } from 'antd'
 import '../CourseCard/card.css'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
+
 
 //src, title, teacher, rating, category, price
 function CourseCard(props) {
+  const history = useHistory()
   return (
     <div
       style={{
@@ -17,6 +20,7 @@ function CourseCard(props) {
         text={props?.price === 0 ? 'Free' : '$' + props?.price || 0}
       >
         <div
+        onClick={() => history.push(`/course/${props.id}`)}
           className="container"
           style={{
             backgroundImage: `url(${

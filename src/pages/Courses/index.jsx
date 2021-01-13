@@ -2,7 +2,7 @@ import { Button, Pagination, Menu, Col, Row, Select } from 'antd'
 import bgPic from 'assets/images/bg.png'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { history } from 'ultis/functions'
@@ -11,6 +11,7 @@ import 'components/Header/header.css'
 import { courses } from 'pages/Home/constant'
 import CourseCard from 'components/CourseCard'
 import { useSelector } from 'react-redux'
+import { GetAllCourses } from 'pages/Dashboard/redux/actions'
 const { Option } = Select
 const { SubMenu } = Menu
 
@@ -18,8 +19,17 @@ function Courses() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const [current, setCurrentPage] = useState(0)
-  const categoryList = useSelector(state => state.Dashboard.categoryList)
+  const {categoryList, courseList} = useSelector(state => state.Dashboard)
   const user = useSelector(state => state.Auth.user)
+
+  useEffect(() => {
+    const val ={
+      page: 1,
+      limit: 6
+    }
+    dispatch(GetAllCourses.get(val))
+    return () => {}
+  }, [])
 
   const background = () => {
     return (
@@ -61,18 +71,19 @@ function Courses() {
   const renderCourses = () => {
     return (
       <Row gutter={16}>
-        {courses.length > 0 ? (
-          courses.map(item => {
+        {courseList.length > 0 ? (
+          courseList.map(item => {
             return (
               <Col span={8} xs={24} sm={12} md={8} style={{ marginBlock: 30 }}>
                 <CourseCard
-                  img={item.img}
-                  title={item.title}
-                  teacher={item.teacher}
+                  id={item.id}
+                  img={item.thumbnail}
+                  title={item.name}
+                  teacher={item.teacherName}
                   cate={item.category}
                   price={item.price}
                   rating={item.rating}
-                  total={item.total}
+                  total={item.ratingCount}
                 />
               </Col>
             )

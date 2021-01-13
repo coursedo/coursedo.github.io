@@ -89,15 +89,23 @@
   background-image: linear-gradient(to right, #ff8a00, #ffc000);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  padding: calc(10px + 0.5vmin);
+  padding: 10px;
 }
 
 #title {
+  font-size: 14px;
   font-family: 'Source Sans Pro';
   font-weight: 600;
+  display: block; /* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 3.6em;
+  line-height: 1.2em;
 }
 
 #teacher {
+  font-size: 12px;
   font-family: 'Source Sans Pro';
   color: white;
 }
