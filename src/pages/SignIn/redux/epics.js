@@ -5,20 +5,30 @@ import { GetUsers } from 'pages/Dashboard/redux/actions'
 import { combineEpics, ofType } from 'redux-observable'
 import { catchError, exhaustMap, map } from 'rxjs/operators'
 import { request } from 'ultis/api'
-import { MODAL_TYPE, ROLES } from 'ultis/functions'
+import { history, MODAL_TYPE, ROLES } from 'ultis/functions'
 import {
+  ChangePassword,
+  ChangePasswordFailed,
+  ChangePasswordSuccess,
   CreatePassword,
   CreatePasswordFailed,
   CreatePasswordSuccess,
+  GetProfile,
+  GetProfileFailed,
+  GetProfileSuccess,
   ResetPassword,
   ResetPasswordFailed,
   ResetPasswordSuccess,
   SignInRequest,
   SignInRequestFailed,
   SignInRequestSuccess,
+  SignOut,
   SignUpRequest,
   SignUpRequestFailed,
   SignUpRequestSuccess,
+  UpdateProfile,
+  UpdateProfileFailed,
+  UpdateProfileSuccess,
   VerifyEmail,
   VerifyEmailFailed,
   VerifyEmailSuccess
@@ -77,6 +87,87 @@ const signupEpic$ = action$ =>
         }),
         catchError(error => {
           return SignUpRequestFailed.get(error)
+        })
+      )
+    })
+  )
+
+const changePassEpic$ = action$ =>
+  action$.pipe(
+    ofType(ChangePassword.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: `users/${action.payload.id}/changePassword`,
+        param: action.payload.data
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            GlobalModal.alertMessage(
+              'Information',
+              'Change password succeed. Please sign in to continue.',
+              MODAL_TYPE.NORMAL,
+              () => {
+                store.dispatch(SignOut.get())
+                history.push({
+                  pathname: '/signin',
+                  state: { from: `/profile` }
+                })
+              }
+            )
+            return ChangePasswordSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return ChangePasswordFailed.get(result)
+        }),
+        catchError(error => {
+          return ChangePasswordFailed.get(error)
+        })
+      )
+    })
+  )
+
+const getProfileEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetProfile.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: `users/${action.payload}`
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetProfileSuccess.get(result.data)
+          }
+          return GetProfileFailed.get(result)
+        }),
+        catchError(error => {
+          return GetProfileFailed.get(error)
+        })
+      )
+    })
+  )
+
+const updateUserProfileEpic$ = action$ =>
+  action$.pipe(
+    ofType(UpdateProfile.type),
+    exhaustMap(action => {
+      return request({
+        method: 'PATCH',
+        url: `users/${action.payload.id}`,
+        param: action.payload.data
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            store.dispatch(GetProfile.get(action.payload.id))
+            GlobalModal.alertMessage('Information', 'Update profile succeed.')
+            return UpdateProfileSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return UpdateProfileFailed.get(result)
+        }),
+        catchError(error => {
+          return UpdateProfileFailed.get(error)
         })
       )
     })
@@ -174,5 +265,8 @@ export const authEpics = combineEpics(
   signupEpic$,
   resetPasswordEpic$,
   createPasswordEpic$,
-  verifyEmailEpic$
+  verifyEmailEpic$,
+  changePassEpic$,
+  updateUserProfileEpic$,
+  getProfileEpic$
 )

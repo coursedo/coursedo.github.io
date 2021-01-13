@@ -1,9 +1,7 @@
 /* .inputBox {
   height: calc(48px + 0.5vmin);
   border: 1px solid #efefef;
-  border-radius: 50%;
-  background-color: #ffffff;
-  margin-bottom: 24px;
+  width: 100%;
 } */
 
 .chooseContainer {
