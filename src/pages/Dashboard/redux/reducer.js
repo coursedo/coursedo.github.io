@@ -49,7 +49,14 @@ export function dashboardReducer(state = initialState, action) {
     case GetAllCourses.type:
       return { ...state, isLoading: true }
     case GetAllCoursesSuccess.type:
-      return { ...state, courseList: action.payload, isLoading: false }
+      return {
+        ...state,
+        courseList: action.payload.page
+          ? action.payload.results
+          : action.payload,
+        page: action.payload.page,
+        isLoading: false
+      }
     case GetAllCoursesFailed.type:
       return { ...state, isLoading: false }
     case SetCurrentPage.type:
