@@ -23,7 +23,7 @@ export function homeReducer(state = initialState, action) {
     case GetHomeCourseSuccess.type:
       return {
         ...state,
-        trending: action.payload.trending,
+        trending: action.payload.treding.results,
         mostBuy: action.payload.mostBuy,
         newest: action.payload.newest,
         isLoading: false

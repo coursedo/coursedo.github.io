@@ -3,7 +3,7 @@ import logo from 'assets/logo.png'
 import { Layout } from 'antd'
 const { Footer } = Layout
 
-function FooterComponent({ children }) {
+function FooterComponent() {
   return (
     <Footer style={{ backgroundColor: '#212121' }}>
       <img

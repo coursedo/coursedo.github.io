@@ -2,14 +2,16 @@ import { Button, Pagination, Menu, Col, Row, Select } from 'antd'
 import bgPic from 'assets/images/bg.png'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { history } from 'ultis/functions'
 import 'pages/Home/home.css'
+import 'components/Header/header.css'
 import { courses } from 'pages/Home/constant'
 import CourseCard from 'components/CourseCard'
 import { useSelector } from 'react-redux'
+import { GetAllCourses } from 'pages/Dashboard/redux/actions'
 const { Option } = Select
 const { SubMenu } = Menu
 
@@ -17,8 +19,17 @@ function Courses() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const [current, setCurrentPage] = useState(0)
-  const categoryList = useSelector(state => state.Dashboard.categoryList)
+  const {categoryList, courseList} = useSelector(state => state.Dashboard)
   const user = useSelector(state => state.Auth.user)
+
+  useEffect(() => {
+    const val ={
+      page: 1,
+      limit: 6
+    }
+    dispatch(GetAllCourses.get(val))
+    return () => {}
+  }, [])
 
   const background = () => {
     return (
@@ -60,24 +71,19 @@ function Courses() {
   const renderCourses = () => {
     return (
       <Row gutter={16}>
-        {courses.length > 0 ? (
-          courses.map(item => {
+        {courseList.length > 0 ? (
+          courseList.map(item => {
             return (
-              <Col
-                span={8}
-                xs={24}
-                sm={12}
-                md={8}
-                style={{ marginBlock: '3vh' }}
-              >
+              <Col span={8} xs={24} sm={12} md={8} style={{ marginBlock: 30 }}>
                 <CourseCard
-                  img={item.img}
-                  title={item.title}
-                  teacher={item.teacher}
+                  id={item.id}
+                  img={item.thumbnail}
+                  title={item.name}
+                  teacher={item.teacherName}
                   cate={item.category}
                   price={item.price}
                   rating={item.rating}
-                  total={item.total}
+                  total={item.ratingCount}
                 />
               </Col>
             )
@@ -99,14 +105,14 @@ function Courses() {
         style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center',
           flex: 1,
-          marginTop: '5vh'
+          marginTop: 50
         }}
       >
         <Col>
-          <h3 id="catTitle">All Courses</h3>
+          <p id="catTitle">All Courses</p>
         </Col>
 
         <Col>
@@ -152,72 +158,37 @@ function Courses() {
   }
 
   return (
-    <>
+    <div className="main">
       <Header />
       {background()}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flex: 1,
-          backgroundColor: 'white'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            flex: 1
-          }}
-        >
-          {renderHeader()}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flex: 0.7,
-              paddingBlock: '3vh',
-              paddingLeft: '5vw',
-              paddingRight: '5vw'
-            }}
-          >
+      <div className="container-fluid">
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            {renderHeader()}
             {renderCourses()}
+            <div
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                display: 'flex',
+                flex: 1,
+                marginBlock: 60
+              }}
+            >
+              <Pagination
+                current={current}
+                onChange={setCurrentPage}
+                total={50}
+              />
+            </div>
           </div>
-          <div
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              display: 'flex',
-              flex: 1,
-              marginBottom: '2vh'
-            }}
-          >
-            <Pagination
-              current={current}
-              onChange={setCurrentPage}
-              total={50}
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            flex: 0.3,
-            backgroundColor: 'white',
-            paddingBlock: '3vh'
-          }}
-        >
-          {renderListCat()}
+          {isDesktopOrLaptop && (
+            <div style={{ marginTop: 50 }}>{renderListCat()}</div>
+          )}
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   )
 }
 
