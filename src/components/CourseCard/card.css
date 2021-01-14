@@ -90,18 +90,22 @@
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   padding: 10px;
+  word-break: break-all;
 }
 
 #title {
   font-size: 14px;
   font-family: 'Source Sans Pro';
   font-weight: 600;
-  display: block; /* or inline-block */
+  display: block;
   text-overflow: ellipsis;
-  word-wrap: break-word;
-  overflow: hidden;
-  max-height: 3.6em;
+  max-height: 2.4em;
   line-height: 1.2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 #teacher {

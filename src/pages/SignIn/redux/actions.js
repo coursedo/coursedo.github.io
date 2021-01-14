@@ -33,3 +33,5 @@ export const VerifyEmailSuccess = defineAction('VERIFY_EMAIL_SUCCESS')
 export const VerifyEmailFailed = defineAction('VERIFY_EMAIL_FAILED')
 
 export const SignOut = defineAction('SIGNOUT_REQUEST')
+
+export const EmptyAction = defineAction('EMPTY_ACTION')

@@ -1,7 +1,7 @@
 import GlobalModal from 'components/GlobalModal'
 import { replace } from 'connected-react-router'
 import { store } from 'core/store'
-import { GetUsers } from 'pages/Dashboard/redux/actions'
+import { DeleteCourseSuccess, GetUsers } from 'pages/Dashboard/redux/actions'
 import { combineEpics, ofType } from 'redux-observable'
 import { catchError, exhaustMap, map } from 'rxjs/operators'
 import { request } from 'ultis/api'
@@ -13,6 +13,7 @@ import {
   CreatePassword,
   CreatePasswordFailed,
   CreatePasswordSuccess,
+  EmptyAction,
   GetProfile,
   GetProfileFailed,
   GetProfileSuccess,
@@ -173,6 +174,15 @@ const updateUserProfileEpic$ = action$ =>
     })
   )
 
+const deleteCourseSuccessEpic$ = action$ =>
+  action$.pipe(
+    ofType(DeleteCourseSuccess.type),
+    map(result => {
+      store.dispatch(GetProfile.get(store.getState().Auth.user.id))
+      return EmptyAction.get()
+    })
+  )
+
 const resetPasswordEpic$ = action$ =>
   action$.pipe(
     ofType(ResetPassword.type),
@@ -268,5 +278,6 @@ export const authEpics = combineEpics(
   verifyEmailEpic$,
   changePassEpic$,
   updateUserProfileEpic$,
-  getProfileEpic$
+  getProfileEpic$,
+  deleteCourseSuccessEpic$
 )

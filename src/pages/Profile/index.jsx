@@ -25,7 +25,7 @@ function Profile() {
     if (!userDetail) {
       history.replace('/')
     }
-  }, [])
+  }, [userDetail])
 
   if (isLoadingProfile || !userDetail) {
     return (

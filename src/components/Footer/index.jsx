@@ -5,7 +5,9 @@ const { Footer } = Layout
 
 function FooterComponent() {
   return (
-    <Footer style={{ backgroundColor: '#212121', textAlign: 'center' }}>
+    <Footer
+      style={{ backgroundColor: '#212121', textAlign: 'center', width: '100%' }}
+    >
       <img
         src={logo}
         width="100"

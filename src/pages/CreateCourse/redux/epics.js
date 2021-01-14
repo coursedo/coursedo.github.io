@@ -1,6 +1,5 @@
 import GlobalModal from 'components/GlobalModal'
 import { DeleteCategoryFailed } from 'pages/Dashboard/redux/actions'
-import EditCourse from 'pages/EditCourse'
 import { combineEpics, ofType } from 'redux-observable'
 import { catchError, exhaustMap, map } from 'rxjs/operators'
 import { request } from 'ultis/api'
@@ -59,12 +58,14 @@ const editCourseEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            GlobalModal.alertMessage(
-              'Information',
-              'Succeed editing course. Go back.',
-              MODAL_TYPE.NORMAL,
-              () => history.replace(`/course/${action.payload.id}`)
-            )
+            if (Object.keys(action.payload.data).length > 1) {
+              GlobalModal.alertMessage(
+                'Information',
+                'Succeed editing course. Go back.',
+                MODAL_TYPE.NORMAL,
+                () => history.replace(`/course/${action.payload.id}`)
+              )
+            }
             return UpdateCourseSuccess.get(result.data)
           }
           GlobalModal.alertMessage('Information', result.data?.message)
@@ -108,6 +109,7 @@ const deleteChapterEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 204) {
+            action.payload?.onSuccess()
             return DeleteChapterSuccess.get(result.data)
           }
           return DeleteCategoryFailed.get(result)
