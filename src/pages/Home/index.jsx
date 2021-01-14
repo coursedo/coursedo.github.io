@@ -18,7 +18,7 @@ function Home() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const user = useSelector(state => state.Auth.user)
-  const {trending, mostBuy, newest} = useSelector(state => state.Home)
+  const { trending, mostBuy, newest } = useSelector(state => state.Home)
 
   useEffect(() => {
     dispatch(GetAllCategories.get())
@@ -28,7 +28,7 @@ function Home() {
 
   return (
     <div className="main">
-      <Header onSearch={val => console.info('keyword', val)} />
+      <Header />
       <div
         style={{
           display: 'flex',

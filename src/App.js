@@ -1,4 +1,5 @@
 import Courses from 'pages/Courses'
+import CateCourses from 'pages/Courses/Category'
 import CreateCourse from 'pages/CreateCourse'
 import CreatePasswordPage from 'pages/CreatePassword'
 import Dashboard from 'pages/Dashboard'
@@ -6,6 +7,7 @@ import EditCourse from 'pages/EditCourse'
 import ForgotPassword from 'pages/ForgotPassword'
 import Home from 'pages/Home'
 import Profile from 'pages/Profile'
+import Search from 'pages/Search'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import VerifyEmailPage from 'pages/VerifyEmail'
@@ -29,6 +31,7 @@ function App() {
       <Route path="/courses" component={Courses} />
       <Route path="/profile" component={Profile} />
       <Route path="/course/:courseId/edit" component={EditCourse} />
+      <Route path="/categories/:id" component={CateCourses} />
     </Router>
   )
 }
