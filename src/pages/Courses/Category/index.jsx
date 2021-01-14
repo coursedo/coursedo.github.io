@@ -9,33 +9,33 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { checkBadge, history } from 'ultis/functions'
-import { GetCoursesFilter, UpdateCurCate } from './redux/actions'
+import { GetCoursesCate, UpdateCurCate } from '../redux/actions'
 import queryString from 'query-string'
 const { Option } = Select
 const { SubMenu } = Menu
 
-function Courses(props) {
+function CateCourses(props) {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
-  const { courseList, page, sort, sortOrder, total } = useSelector(
+  const { courseList, page, sort, sortOrder, total, curCate } = useSelector(
     state => state.CourseList
   )
   const { categoryList } = useSelector(state => state.Dashboard)
   const user = useSelector(state => state.Auth.user)
   const value = queryString.parse(props.location.search)
-  const keyword = value?.keyword || null
+  const id = props.match.params.id
 
   useEffect(() => {
     const val = {
-      keyword: keyword,
-      page: Math.floor(total / 6) + 1 < page ? 1 : page,
+      category: id,
+      page: page,
       limit: 6,
       sort: sort,
       sortOrder: sortOrder
     }
-    dispatch(GetCoursesFilter.get(val))
+    dispatch(GetCoursesCate.get(val))
     return () => {}
-  }, [keyword, page, sortOrder, sort])
+  }, [id, page])
 
   const background = () => {
     return (
@@ -106,20 +106,20 @@ function Courses(props) {
     let val = null
     if (value === '1') {
       val = {
-        keyword: keyword,
+        category: id,
         page: 1,
         limit: 6
       }
     } else if (value === '2') {
       val = {
-        keyword: keyword,
+        category: id,
         page: 1,
         limit: 6,
         sort: 'rating'
       }
     } else if (value === '3') {
       val = {
-        keyword: keyword,
+        category: id,
         page: 1,
         limit: 6,
         sort: 'price',
@@ -127,25 +127,25 @@ function Courses(props) {
       }
     } else if (value === '4') {
       val = {
-        keyword: keyword,
+        category: id,
         page: 1,
         limit: 6,
         sort: 'price',
         sortOrder: 'desc'
       }
     }
-    dispatch(GetCoursesFilter.get(val))
+    dispatch(GetCoursesCate.get(val))
   }
 
   const updatePage = num => {
     const val = {
-      keyword: keyword,
+      category: id,
       page: num,
       limit: 6,
       sort: sort,
       sortOrder: sortOrder
     }
-    dispatch(GetCoursesFilter.get(val))
+    dispatch(GetCoursesCate.get(val))
   }
 
   const renderHeader = () => {
@@ -161,11 +161,7 @@ function Courses(props) {
         }}
       >
         <Col>
-          <p id="catTitle">
-            {keyword !== null
-              ? keyword[0].toUpperCase() + keyword.slice(1)
-              : 'All Courses'}
-          </p>
+          <p id="catTitle">{curCate}</p>
         </Col>
 
         <Col>
@@ -267,4 +263,4 @@ function Courses(props) {
   )
 }
 
-export default Courses
+export default CateCourses

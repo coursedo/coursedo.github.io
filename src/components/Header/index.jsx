@@ -10,12 +10,12 @@ import {
   Popover
 } from 'antd'
 import { Categories } from 'components/Categories'
+import { UpdateSearch } from 'pages/Courses/redux/actions'
 import { SignOut } from 'pages/SignIn/redux/actions'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ROLES } from 'ultis/functions'
-
 const { Search } = Input
 const { Link } = Anchor
 
@@ -144,7 +144,17 @@ function AppHeader(props) {
                 placeholder="Search for Courses i.e web-development"
                 enterButton="Search"
                 size="large"
-                onSearch={value => props.onSearch(value)}
+                onSearch={value => {
+                  const keyword = value.trim()
+                  if (/\S+/.test(keyword)) {
+                    dispatch(UpdateSearch.get())
+                    history.push({
+                      pathname: `/courses`,
+                      search: `keyword=${keyword}`,
+                      state: { from: `/` }
+                    })
+                  }
+                }}
               />
               <Button
                 shape="round"

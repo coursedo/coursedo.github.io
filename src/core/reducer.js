@@ -1,4 +1,5 @@
 import { connectRouter } from 'connected-react-router'
+import { coursesReducer } from 'pages/Courses/redux/reducer'
 import { courseReducer } from 'pages/CreateCourse/redux/reducer'
 import { dashboardReducer } from 'pages/Dashboard/redux/reducer'
 import { homeReducer } from 'pages/Home/redux/reducer'
@@ -11,5 +12,6 @@ export const rootReducer = combineReducers({
   Dashboard: dashboardReducer,
   Course: courseReducer,
   Home: homeReducer,
+  CourseList: coursesReducer,
   router: connectRouter(history)
 })
