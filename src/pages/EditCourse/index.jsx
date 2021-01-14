@@ -12,6 +12,7 @@ import {
 import CInput from 'components/CInput'
 import GlobalModal from 'components/GlobalModal'
 import Header from 'components/Header'
+import Footer from 'components/Footer'
 import { ContentState, convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import { Formik } from 'formik'
@@ -371,7 +372,7 @@ export default function EditCourse(props) {
               )}
 
               <Row align="middle" justify="space-between" wrap gutter={32}>
-                <Col span={6} sm={24} lg={12} className="rowCol">
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
                   <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
                     Price
                   </Text>
@@ -387,7 +388,7 @@ export default function EditCourse(props) {
                   />
                 </Col>
 
-                <Col span={6} sm={24} lg={12} className="rowCol">
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
                   <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
                     {`Promotion price (left blank if not provided)`}
                   </Text>
@@ -403,7 +404,7 @@ export default function EditCourse(props) {
                   />
                 </Col>
 
-                <Col span={6} sm={12} lg={12} className="rowCol">
+                <Col span={6} xs={14} sm={12} lg={12} className="rowCol">
                   <Text style={{ marginRight: 16 }} strong>
                     Mark as complete
                   </Text>
@@ -415,7 +416,7 @@ export default function EditCourse(props) {
                   />
                 </Col>
 
-                <Col span={6} sm={12} lg={12} className="rowCol">
+                <Col span={6} xs={10} sm={12} lg={12} className="rowCol">
                   <Text style={{ marginRight: 16 }} strong>
                     Public
                   </Text>
@@ -569,6 +570,7 @@ export default function EditCourse(props) {
           )
         }}
       </Formik>
+      <Footer />
     </>
   )
 }
