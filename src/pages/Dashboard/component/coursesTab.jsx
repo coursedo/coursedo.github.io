@@ -1,14 +1,44 @@
-import { Table, Space, Avatar } from 'antd'
-import React, { useRef, useState } from 'react'
-import '../dashboard.css'
-import { getColumnSearchProps } from './searchInput'
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { Avatar, Modal, Space, Table } from 'antd'
 import moment from 'moment'
-import { ROLES } from 'ultis/functions'
+import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { COLOR, ROLES } from 'ultis/functions'
+import '../dashboard.css'
+import { DeleteCourse } from '../redux/actions'
+import { getColumnSearchProps } from './searchInput'
 
 function CoursesTab({ courseList, role }) {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchColumn] = useState('')
   const refInput = useRef()
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  const handleDelete = record => {
+    Modal.confirm({
+      title: 'Confirm',
+      icon: <DeleteOutlined style={{ color: COLOR.primary1 }} />,
+      content: `Do you confirm to delete ${record.name}?`,
+      okText: 'Confirm',
+      cancelText: 'Cancel',
+      centered: true,
+      okButtonProps: { style: { backgroundColor: COLOR.primary1 } },
+      onOk: () => {
+        dispatch(DeleteCourse.get(record.id))
+        Modal.destroyAll()
+      }
+    })
+  }
+
+  const handleView = record => {
+    history.push(`/course/${record.id}`)
+  }
+
+  const handleEdit = record => {
+    history.push(`/course/${record.id}/edit`)
+  }
 
   const courseColumns = [
     {
@@ -98,6 +128,32 @@ function CoursesTab({ courseList, role }) {
       sorter: (a, b) => moment(a.updatedAt).isBefore(moment(b.updatedAt)),
       render: (value, record) => {
         return <span>{moment(value).format('DD/MM/YYYY')}</span>
+      }
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (value, record) => {
+        return (
+          <Space>
+            <EyeOutlined
+              style={{ fontSize: 20 }}
+              onClick={() => handleView(record)}
+            />
+            {role === ROLES.TEACHER && (
+              <EditOutlined
+                style={{ fontSize: 20, color: COLOR.primary1 }}
+                onClick={() => handleEdit(record)}
+              />
+            )}
+            {role === ROLES.TEACHER && (
+              <DeleteOutlined
+                style={{ fontSize: 20, color: '#FF0000' }}
+                onClick={() => handleDelete(record)}
+              />
+            )}
+          </Space>
+        )
       }
     }
   ]
