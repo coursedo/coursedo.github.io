@@ -12,6 +12,7 @@ const initialState = {
   trending: [],
   mostBuy: [],
   newest: [],
+  trendCategory: [],
   searchCourses: [],
   totalItems: 0
 }
@@ -26,6 +27,7 @@ export function homeReducer(state = initialState, action) {
         trending: action.payload.treding.results,
         mostBuy: action.payload.mostBuy,
         newest: action.payload.newest,
+        trendCategory: action.payload.trendCategory,
         isLoading: false
       }
     case GetHomeCourseFailed.type:
@@ -41,9 +43,6 @@ export function homeReducer(state = initialState, action) {
       }
     case SearchCourseFailed.type:
       return { ...state, isLoading: false }
-
-    case SignOut.type:
-      return initialState
     default:
       return state
   }

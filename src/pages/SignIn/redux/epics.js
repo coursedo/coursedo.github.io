@@ -17,6 +17,12 @@ import {
   GetProfile,
   GetProfileFailed,
   GetProfileSuccess,
+  GetWatchlist,
+  GetWatchlistFailed,
+  GetWatchlistSuccess,
+  RefreshToken,
+  RefreshTokenFailed,
+  RefreshTokenSuccess,
   ResetPassword,
   ResetPasswordFailed,
   ResetPasswordSuccess,
@@ -149,6 +155,27 @@ const getProfileEpic$ = action$ =>
     })
   )
 
+const getWatchlistEpic$ = action$ =>
+  action$.pipe(
+    ofType(GetWatchlist.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: `users/${action.payload}/watchlist`
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetWatchlistSuccess.get(result.data)
+          }
+          return GetWatchlistFailed.get(result)
+        }),
+        catchError(error => {
+          return GetWatchlistFailed.get(error)
+        })
+      )
+    })
+  )
+
 const updateUserProfileEpic$ = action$ =>
   action$.pipe(
     ofType(UpdateProfile.type),
@@ -180,6 +207,29 @@ const deleteCourseSuccessEpic$ = action$ =>
     map(result => {
       store.dispatch(GetProfile.get(store.getState().Auth.user.id))
       return EmptyAction.get()
+    })
+  )
+
+const refreshTokenEpic$ = action$ =>
+  action$.pipe(
+    ofType(RefreshToken.type),
+    exhaustMap(action => {
+      return request({
+        method: 'POST',
+        url: 'auth/refresh',
+        param: action.payload
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return RefreshTokenSuccess.get(result.data)
+          }
+          GlobalModal.alertMessage()
+          return RefreshTokenFailed.get(result)
+        }),
+        catchError(error => {
+          return RefreshTokenFailed.get(error)
+        })
+      )
     })
   )
 
@@ -279,5 +329,7 @@ export const authEpics = combineEpics(
   changePassEpic$,
   updateUserProfileEpic$,
   getProfileEpic$,
-  deleteCourseSuccessEpic$
+  deleteCourseSuccessEpic$,
+  getWatchlistEpic$,
+  refreshTokenEpic$
 )
