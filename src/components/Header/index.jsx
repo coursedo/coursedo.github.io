@@ -20,8 +20,6 @@ import { ROLES } from 'ultis/functions'
 const { Search } = Input
 const { Link } = Anchor
 
-const { SubMenu } = Menu
-
 function AppHeader(props) {
   const [visible, setVisible] = useState(false)
   const history = useHistory()
@@ -67,7 +65,7 @@ function AppHeader(props) {
     </Menu>
   )
 
-  const teacherPopover = (
+  const adminPopover = (
     <Menu style={{ width: 200 }}>
       <Menu.Item
         key={'profile'}
@@ -76,6 +74,14 @@ function AppHeader(props) {
         }}
       >
         Profile
+      </Menu.Item>
+      <Menu.Item
+        key={'dashboard'}
+        onClick={() => {
+          history.push(`/admin`)
+        }}
+      >
+        Dashboard
       </Menu.Item>
       <Menu.Item
         key={'logout'}
@@ -185,7 +191,7 @@ function AppHeader(props) {
               <Popover
                 placement="bottomRight"
                 content={
-                  user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
+                  user?.role === ROLES.ADMIN ? adminPopover : studentPopover
                 }
                 trigger="click"
               >
@@ -195,7 +201,7 @@ function AppHeader(props) {
               <Popover
                 placement="bottomRight"
                 content={
-                  user?.role === ROLES.TEACHER ? teacherPopover : studentPopover
+                  user?.role === ROLES.ADMIN ? adminPopover : studentPopover
                 }
                 trigger="click"
               >
@@ -242,9 +248,7 @@ function AppHeader(props) {
                 <Popover
                   placement="bottomRight"
                   content={
-                    user?.role === ROLES.TEACHER
-                      ? teacherPopover
-                      : studentPopover
+                    user?.role === ROLES.ADMIN ? adminPopover : studentPopover
                   }
                   trigger="click"
                 >

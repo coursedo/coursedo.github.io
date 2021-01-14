@@ -1,8 +1,16 @@
-import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons'
-import { Modal, Space, Spin, Table } from 'antd'
+import {
+  DeleteOutlined,
+  LoadingOutlined,
+  EyeOutlined,
+  EditOutlined,
+  PlusCircleOutlined
+} from '@ant-design/icons'
+import { Button, Modal, Space, Spin, Table, Switch } from 'antd'
 import Avatar from 'antd/lib/avatar/avatar'
+import { UpdateCourse } from 'pages/CreateCourse/redux/actions'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { COLOR } from 'ultis/functions'
 import '../dashboard.css'
 import { DeleteCourse, GetAllCourses } from '../redux/actions'
@@ -19,6 +27,7 @@ function CoursesList() {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchColumn] = useState('')
   const refInput = useRef()
+  const history = useHistory()
 
   useEffect(() => {
     dispatch(GetAllCourses.get())
@@ -38,6 +47,14 @@ function CoursesList() {
         Modal.destroyAll()
       }
     })
+  }
+
+  const handleView = record => {
+    history.push(`/course/${record.id}`)
+  }
+
+  const handleEdit = record => {
+    history.push(`/course/${record.id}/edit`)
   }
 
   const courseColumns = [
@@ -80,7 +97,7 @@ function CoursesList() {
       sorter: (a, b) => a.category.localeCompare(b.category)
     },
     {
-      title: 'Total enrollment',
+      title: 'Enrollment',
       dataIndex: 'enrollCount',
       key: 'enrollCount',
       sorter: (a, b) => Number(a.enrollCount) > Number(b.enrollCount)
@@ -121,11 +138,43 @@ function CoursesList() {
       }
     },
     {
+      title: 'Public',
+      dataIndex: 'publicStatus',
+      key: 'publicStatus',
+      render: (value, record) => {
+        return (
+          <Space>
+            <Switch
+              defaultChecked={value}
+              onChange={checked =>
+                dispatch(
+                  UpdateCourse.get({
+                    id: record.id,
+                    data: {
+                      publicStatus: checked
+                    }
+                  })
+                )
+              }
+            />
+          </Space>
+        )
+      }
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (value, record) => {
         return (
           <Space>
+            <EyeOutlined
+              style={{ fontSize: 20 }}
+              onClick={() => handleView(record)}
+            />
+            <EditOutlined
+              style={{ fontSize: 20, color: COLOR.primary1 }}
+              onClick={() => handleEdit(record)}
+            />
             <DeleteOutlined
               style={{ fontSize: 20, color: '#FF0000' }}
               onClick={() => handleDelete(record)}
@@ -148,6 +197,17 @@ function CoursesList() {
     <>
       <div className="chooseContainer">
         <span className="titleTopic">Courses</span>
+        <Button
+          type="primary"
+          icon={<PlusCircleOutlined />}
+          style={{ width: 200, marginBottom: 32 }}
+          onClick={() => {
+            history.push('/create')
+          }}
+          size="large"
+        >
+          Add new course
+        </Button>
         <Table columns={courseColumns} dataSource={courseList} />
       </div>
     </>

@@ -10,7 +10,6 @@ import { history } from 'ultis/functions'
 import '../../components/Header/header.css'
 import DiscoBtn from './components/discoverBtn'
 import SwipeList from './components/swipeComponent'
-import { courses } from './constant'
 import './home.css'
 import { GetHomeCourse } from './redux/actions'
 
@@ -18,7 +17,9 @@ function Home() {
   const dispatch = useDispatch()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const user = useSelector(state => state.Auth.user)
-  const { trending, mostBuy, newest } = useSelector(state => state.Home)
+  const { trending, mostBuy, newest, trendCategory } = useSelector(
+    state => state.Home
+  )
 
   useEffect(() => {
     dispatch(GetAllCategories.get())
@@ -82,7 +83,7 @@ function Home() {
         </div>
         <div id="swipe">
           <p id="type">Top categories</p>
-          <SwipeList list={courses} type={'category'} />
+          <SwipeList list={trendCategory} type={'category'} />
           <DiscoBtn onClick={() => history.push('/categories')} />
         </div>
       </div>

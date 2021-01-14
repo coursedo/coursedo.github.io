@@ -10,20 +10,26 @@ import {
   Upload
 } from 'antd'
 import CInput from 'components/CInput'
+import GlobalModal from 'components/GlobalModal'
 import Header from 'components/Header'
-import { convertToRaw, EditorState, ContentState } from 'draft-js'
+import Footer from 'components/Footer'
+import { ContentState, convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
-import htmlToDraft from 'html-to-draftjs'
 import { Formik } from 'formik'
+import htmlToDraft from 'html-to-draftjs'
 import { validationCourseSchema } from 'pages/CreateCourse/constant'
 import 'pages/CreateCourse/createCourse.css'
-import { GetCourseDetail } from 'pages/CreateCourse/redux/actions'
+import {
+  DeleteChapter,
+  GetCourseDetail,
+  UpdateCourse
+} from 'pages/CreateCourse/redux/actions'
 import {
   beforeUpload,
   dummyRequest,
   getBase64
 } from 'pages/Dashboard/component/addTeacher'
-import { GetAllCategories } from 'pages/Dashboard/redux/actions'
+import { GetAllCategories, GetUsers } from 'pages/Dashboard/redux/actions'
 import React, { useEffect, useState } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -46,12 +52,13 @@ export default function EditCourse(props) {
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth.user)
   const courseDetail = useSelector(state => state.Course.courseDetail)
+  const userList = useSelector(state => state.Dashboard.userList)
   const isLoading = useSelector(state => state.Course.isLoading)
+  const isUpdating = useSelector(state => state.Course.isUpdating)
   const history = useHistory()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const categoryList = useSelector(state => state.Dashboard.categoryList)
   const [isLoadingImage, setLoadingImage] = useState(false)
-  const [imgName, setImgName] = useState(null)
   let realList = []
   categoryList.forEach(item => {
     realList.push({
@@ -72,6 +79,9 @@ export default function EditCourse(props) {
     if (user && (user.role === ROLES.ADMIN || user.role === ROLES.TEACHER)) {
       dispatch(GetAllCategories.get())
       dispatch(GetCourseDetail.get(courseId))
+      if (user.role === ROLES.ADMIN) {
+        dispatch(GetUsers.get({ role: ROLES.TEACHER }))
+      }
     } else {
       history.replace('/')
     }
@@ -81,33 +91,35 @@ export default function EditCourse(props) {
     values.chapters.forEach((item, index) => {
       item.numberId = index + 1
     })
-    // dispatch(
-    //   AddCourse.get({
-    //     ...values,
-    //     numberOfChapter: values.chapters.length,
-    //     thumbnail: imgURL
-    //   })
-    // )
+    dispatch(
+      UpdateCourse.get({
+        id: courseId,
+        data: {
+          ...values,
+          numberOfChapter: values.chapters.length,
+          thumbnail: imgURL,
+          promotionPrice: Number(values.promotionPrice)
+            ? Number(values.promotionPrice)
+            : null
+        }
+      })
+    )
   }
 
-  const handleUploadImg = values => {
-    CoursedoFirebase.storage()
-      .ref('Courses')
-      .child(imgName)
-      .getDownloadURL()
-      .then(dwnURL => {
-        submitCourse(values, dwnURL)
-      })
-      .catch(async error => {
-        try {
-          const snapshot = await CoursedoFirebase.storage()
-            .ref('Courses')
-            .child(imgName)
-            .putString(values.thumbnail, 'data_url')
-          const downloadUrl = await snapshot.ref.getDownloadURL()
-          submitCourse(values, downloadUrl)
-        } catch (errorUpload) {}
-      })
+  const handleUploadImg = async values => {
+    try {
+      const snapshot = await CoursedoFirebase.storage()
+        .ref('Courses')
+        .child(`thumbnail_${courseId}`)
+        .putString(values.thumbnail, 'data_url')
+      const downloadUrl = await snapshot.ref.getDownloadURL()
+      submitCourse(values, downloadUrl)
+    } catch (errorUpload) {
+      GlobalModal.alertMessage(
+        'Information',
+        'An unexpected error occured when updating image. Please try again before updating course.'
+      )
+    }
   }
 
   const handleUploadThumb = (info, handleChange) => {
@@ -116,7 +128,6 @@ export default function EditCourse(props) {
       return
     }
     if (info.file.status === 'done') {
-      setImgName(info.file.name)
       getBase64(info.file.originFileObj, imageUrl => {
         handleChange('thumbnail')(imageUrl)
         setLoadingImage(false)
@@ -167,6 +178,25 @@ export default function EditCourse(props) {
   )
   const editorState = EditorState.createWithContent(contentState)
 
+  const onDeleteChapter = (chapter, index, values, setFieldValue) => {
+    if (chapter.id) {
+      dispatch(
+        DeleteChapter.get({
+          courseId,
+          chapterId: chapter.id,
+          onSuccess: () => {
+            let chapters = values.chapters
+            chapters.splice(index, 1)
+            setFieldValue('chapters', chapters)
+          }
+        })
+      )
+    } else {
+      let chapters = values.chapters
+      chapters.splice(index, 1)
+      setFieldValue('chapters', chapters)
+    }
+  }
   const uploadButton = (
     <div>
       {isLoadingImage ? (
@@ -198,11 +228,21 @@ export default function EditCourse(props) {
           ],
           categoryId: courseDetail.categoryId || null,
           completeStatus: courseDetail.completeStatus || false,
-          publicStatus: courseDetail.publicStatus || true
+          publicStatus: courseDetail.publicStatus || true,
+          teacherId:
+            courseDetail.teacherId ||
+            (user && user.role === ROLES.TEACHER ? user.id : null),
+          promotionPrice: courseDetail.promotionPrice || null
         }}
         isInitialValid={false}
         validationSchema={validationCourseSchema}
-        onSubmit={values => submitCourse(values, values.thumbnail)}
+        onSubmit={async values => {
+          if (values.thumbnail && values.thumbnail.includes(';base64')) {
+            await handleUploadImg(values)
+          } else {
+            submitCourse(values, values.thumbnail)
+          }
+        }}
       >
         {({
           handleChange,
@@ -248,14 +288,6 @@ export default function EditCourse(props) {
                   uploadButton
                 )}
               </Upload>
-              <CInput
-                className="inputBox"
-                value={values.thumbnail}
-                onChange={handleChange('thumbnail')}
-                onTouchStart={() => setFieldTouched('thumbnail')}
-                onBlur={handleBlur('thumbnail')}
-                placeholder="Để link hình ở đây nha"
-              />
               <Typography style={{ color: 'red' }}>
                 {errors.thumbnail}
               </Typography>
@@ -300,7 +332,6 @@ export default function EditCourse(props) {
               <div style={{ marginBottom: 12, marginTop: 16 }}>
                 <Text strong>Category</Text>
                 <Select
-                  disabled
                   style={{ width: '100%' }}
                   value={values.categoryId}
                   onChange={value => setFieldValue('categoryId', value)}
@@ -317,8 +348,31 @@ export default function EditCourse(props) {
                 </Typography>
               </div>
 
+              {user && user.role === ROLES.ADMIN && (
+                <div style={{ marginBottom: 12, marginTop: 16 }}>
+                  <Text strong>Teacher</Text>
+                  <Select
+                    style={{ width: '100%' }}
+                    value={values.teacherId}
+                    onChange={value => setFieldValue('teacherId', value)}
+                  >
+                    <Option value={null}>
+                      Choose one teacher for this course
+                    </Option>
+                    {userList.map(item => (
+                      <Option key={`teacher${item.id}`} value={item.id}>
+                        {item.fullName}
+                      </Option>
+                    ))}
+                  </Select>
+                  <Typography style={{ color: 'red' }}>
+                    {errors.teacherId}
+                  </Typography>
+                </div>
+              )}
+
               <Row align="middle" justify="space-between" wrap gutter={32}>
-                <Col span={10} sm={24} lg={10} className="rowCol">
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
                   <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
                     Price
                   </Text>
@@ -334,8 +388,26 @@ export default function EditCourse(props) {
                   />
                 </Col>
 
-                <Col span={8} sm={12} lg={8} className="rowCol">
-                  <Text strong>Mark as complete</Text>
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
+                  <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
+                    {`Promotion price (left blank if not provided)`}
+                  </Text>
+                  <CInput
+                    className="inputBox"
+                    value={values.promotionPrice}
+                    onChange={handleChange('promotionPrice')}
+                    onTouchStart={() => setFieldTouched('promotionPrice')}
+                    onBlur={handleBlur('promotionPrice')}
+                    placeholder="0.99"
+                    error={errors.promotionPrice}
+                    type="number"
+                  />
+                </Col>
+
+                <Col span={6} xs={14} sm={12} lg={12} className="rowCol">
+                  <Text style={{ marginRight: 16 }} strong>
+                    Mark as complete
+                  </Text>
                   <Switch
                     defaultChecked={values.completeStatus}
                     onChange={checked =>
@@ -344,8 +416,10 @@ export default function EditCourse(props) {
                   />
                 </Col>
 
-                <Col span={6} sm={12} lg={6} className="rowCol">
-                  <Text strong>Public</Text>
+                <Col span={6} xs={10} sm={12} lg={12} className="rowCol">
+                  <Text style={{ marginRight: 16 }} strong>
+                    Public
+                  </Text>
                   <Switch
                     defaultChecked={values.publicStatus}
                     onChange={checked => setFieldValue('publicStatus', checked)}
@@ -380,11 +454,9 @@ export default function EditCourse(props) {
                           <Button
                             size="middle"
                             style={{ backgroundColor: 'red', color: 'white' }}
-                            onClick={() => {
-                              let chapters = values.chapters
-                              chapters.splice(i, 1)
-                              setFieldValue('chapters', chapters)
-                            }}
+                            onClick={() =>
+                              onDeleteChapter(step, i, values, setFieldValue)
+                            }
                           >
                             Delete
                           </Button>
@@ -487,8 +559,9 @@ export default function EditCourse(props) {
                 <Button
                   size="large"
                   type="primary"
-                  disabled={!isValid}
+                  disabled={Object.keys(errors).length > 0}
                   onClick={handleSubmit}
+                  loading={isUpdating}
                 >
                   Update
                 </Button>
@@ -497,6 +570,7 @@ export default function EditCourse(props) {
           )
         }}
       </Formik>
+      <Footer />
     </>
   )
 }

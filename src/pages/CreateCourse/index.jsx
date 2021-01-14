@@ -1,33 +1,36 @@
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import {
   Button,
+  Col,
+  Row,
   Select,
   Space,
   Switch,
   Typography,
-  Row,
-  Col,
   Upload
 } from 'antd'
 import CInput from 'components/CInput'
 import Header from 'components/Header'
-import { Formik } from 'formik'
-import { GetAllCategories } from 'pages/Dashboard/redux/actions'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { COLOR, ROLES } from 'ultis/functions'
-import { validationCourseSchema } from './constant'
-import { useMediaQuery } from 'react-responsive'
-import './createCourse.css'
-import { beforeUpload } from 'pages/Dashboard/component/addTeacher'
-import { dummyRequest } from 'pages/Dashboard/component/addTeacher'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { getBase64 } from 'pages/Dashboard/component/addTeacher'
-import { Editor } from 'react-draft-wysiwyg'
+import Footer from 'components/Footer'
 import { convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
+import { Formik } from 'formik'
+import {
+  beforeUpload,
+  dummyRequest,
+  getBase64
+} from 'pages/Dashboard/component/addTeacher'
+import { GetAllCategories, GetUsers } from 'pages/Dashboard/redux/actions'
+import React, { useEffect, useState } from 'react'
+import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
+import { useHistory } from 'react-router-dom'
 import CoursedoFirebase from 'ultis/firebaseConfig'
+import { COLOR, ROLES } from 'ultis/functions'
+import { validationCourseSchema } from './constant'
+import './createCourse.css'
 import { AddCourse } from './redux/actions'
 
 const { Title, Text } = Typography
@@ -38,7 +41,9 @@ export default function CreateCourse(props) {
   const user = useSelector(state => state.Auth.user)
   const history = useHistory()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
+  const userList = useSelector(state => state.Dashboard.userList)
   const categoryList = useSelector(state => state.Dashboard.categoryList)
+  const isUpdating = useSelector(state => state.Course.isUpdating)
   const [isLoadingImage, setLoadingImage] = useState(false)
   const [imgName, setImgName] = useState(null)
   let realList = []
@@ -58,12 +63,15 @@ export default function CreateCourse(props) {
   })
 
   useEffect(() => {
-    if (user && user.role !== ROLES.TEACHER) {
-      history.replace('/')
-    } else {
+    if (user && (user.role === ROLES.ADMIN || user.role === ROLES.TEACHER)) {
       dispatch(GetAllCategories.get())
+      if (user.role === ROLES.ADMIN) {
+        dispatch(GetUsers.get({ role: ROLES.TEACHER }))
+      }
+    } else {
+      history.replace('/')
     }
-  }, [])
+  }, [user])
 
   const submitCourse = (values, imgURL) => {
     values.chapters.forEach((item, index) => {
@@ -73,7 +81,10 @@ export default function CreateCourse(props) {
       AddCourse.get({
         ...values,
         numberOfChapter: values.chapters.length,
-        thumbnail: imgURL
+        thumbnail: imgURL,
+        promotionPrice: Number(values.promotionPrice)
+          ? Number(values.promotionPrice)
+          : null
       })
     )
   }
@@ -172,11 +183,13 @@ export default function CreateCourse(props) {
           chapters: [{ numberId: 1, name: '', description: null, video: null }],
           categoryId: null,
           completeStatus: false,
-          publicStatus: true
+          publicStatus: true,
+          teacherId: user && user.role === ROLES.TEACHER ? user.id : null,
+          promotionPrice: null
         }}
         isInitialValid={false}
         validationSchema={validationCourseSchema}
-        onSubmit={values => submitCourse(values, values.thumbnail)}
+        onSubmit={values => handleUploadImg(values)}
       >
         {({
           handleChange,
@@ -222,14 +235,6 @@ export default function CreateCourse(props) {
                   uploadButton
                 )}
               </Upload>
-              <CInput
-                className="inputBox"
-                value={values.thumbnail}
-                onChange={handleChange('thumbnail')}
-                onTouchStart={() => setFieldTouched('thumbnail')}
-                onBlur={handleBlur('thumbnail')}
-                placeholder="Để link hình ở đây nha"
-              />
               <Typography style={{ color: 'red' }}>
                 {errors.thumbnail}
               </Typography>
@@ -289,8 +294,31 @@ export default function CreateCourse(props) {
                 </Typography>
               </div>
 
-              <Row align="middle" justify="space-between" wrap gutter={32}>
-                <Col span={10} sm={24} lg={10} className="rowCol">
+              {user && user.role === ROLES.ADMIN && (
+                <div style={{ marginBottom: 12, marginTop: 16 }}>
+                  <Text strong>Teacher</Text>
+                  <Select
+                    style={{ width: '100%' }}
+                    value={values.teacherId}
+                    onChange={value => setFieldValue('teacherId', value)}
+                  >
+                    <Option value={null}>
+                      Choose one teacher for this course
+                    </Option>
+                    {userList.map(item => (
+                      <Option key={`teacher${item.id}`} value={item.id}>
+                        {item.fullName}
+                      </Option>
+                    ))}
+                  </Select>
+                  <Typography style={{ color: 'red' }}>
+                    {errors.teacherId}
+                  </Typography>
+                </div>
+              )}
+
+              <Row align="top" justify="space-between" wrap gutter={32}>
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
                   <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
                     Price
                   </Text>
@@ -306,8 +334,26 @@ export default function CreateCourse(props) {
                   />
                 </Col>
 
-                <Col span={8} sm={12} lg={8} className="rowCol">
-                  <Text strong>Mark as complete</Text>
+                <Col span={6} xs={24} sm={24} lg={12} className="rowCol">
+                  <Text strong style={{ marginBottom: 12, marginRight: 8 }}>
+                    {`Promotion price (left blank if not provided)`}
+                  </Text>
+                  <CInput
+                    className="inputBox"
+                    value={values.promotionPrice}
+                    onChange={handleChange('promotionPrice')}
+                    onTouchStart={() => setFieldTouched('promotionPrice')}
+                    onBlur={handleBlur('promotionPrice')}
+                    placeholder="0.99"
+                    error={errors.promotionPrice}
+                    type="number"
+                  />
+                </Col>
+
+                <Col span={6} xs={14} sm={12} lg={12} className="rowCol">
+                  <Text style={{ marginRight: 16 }} strong>
+                    Mark as complete
+                  </Text>
                   <Switch
                     defaultChecked={values.completeStatus}
                     onChange={checked =>
@@ -316,8 +362,10 @@ export default function CreateCourse(props) {
                   />
                 </Col>
 
-                <Col span={6} sm={12} lg={6} className="rowCol">
-                  <Text strong>Public</Text>
+                <Col span={6} xs={10} sm={12} lg={12} className="rowCol">
+                  <Text style={{ marginRight: 16 }} strong>
+                    Public
+                  </Text>
                   <Switch
                     defaultChecked={values.publicStatus}
                     onChange={checked => setFieldValue('publicStatus', checked)}
@@ -461,6 +509,7 @@ export default function CreateCourse(props) {
                   type="primary"
                   disabled={!isValid}
                   onClick={handleSubmit}
+                  loading={isUpdating}
                 >
                   Create
                 </Button>
@@ -469,6 +518,7 @@ export default function CreateCourse(props) {
           )
         }}
       </Formik>
+      <Footer />
     </>
   )
 }

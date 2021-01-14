@@ -21,7 +21,16 @@ export const validationCourseSchema = yup.object().shape({
     .number()
     .required('* Please input price')
     .min(0, 'Please input valid price'),
+  promotionPrice: yup
+    .number()
+    .nullable()
+    .min(0, 'Please input valid price')
+    .lessThan(
+      yup.ref('price'),
+      'Promotion price must be less than original price'
+    ),
   categoryId: yup.number().nullable().required('* Please choose category'),
+  teacherId: yup.string().nullable().required('* Please choose teacher'),
   chapters: yup
     .array()
     .required('* Please input at least 1 chapter')

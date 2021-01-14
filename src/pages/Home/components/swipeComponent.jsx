@@ -68,7 +68,7 @@ function SwipeList(props) {
         <Slider {...settings}>
           {props.list?.length > 0 ? (
             props.list.map(item => {
-              return <CateCard img={item.img} title={item.title} />
+              return <CateCard img={item.img} title={item.name} />
             })
           ) : (
             <div />
