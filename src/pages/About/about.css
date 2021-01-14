@@ -1,0 +1,35 @@
+.panel-heading{
+    display: flex;
+    flex: 2;
+    padding-left: 100px;
+    padding-top: 100px;
+}
+.panel-title{
+    color: #ff8a00;
+    font-family: Red Hat Display;
+    font-size: calc(36px + 0.5vmin);
+    font-style: normal;
+    font-weight: 700;
+    line-height: 64px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+.panel-body{
+    display: block;
+    padding-left: 100px;
+    padding-bottom: 100px;
+
+    
+}
+
+p span{
+    display: block;
+    color: #5C5C5C;
+    font-family: Red Hat Display;
+    font-size: calc(16px + 0.5vmin);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px;
+    letter-spacing: 0em;
+    text-align: left;
+}

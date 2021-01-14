@@ -19,8 +19,6 @@ import { ROLES } from 'ultis/functions'
 const { Search } = Input
 const { Link } = Anchor
 
-const { SubMenu } = Menu
-
 function AppHeader(props) {
   const [visible, setVisible] = useState(false)
   const history = useHistory()
