@@ -35,7 +35,7 @@ function CateCourses(props) {
     }
     dispatch(GetCoursesCate.get(val))
     return () => {}
-  }, [id, page])
+  }, [dispatch, id, page])
 
   const background = () => {
     return (

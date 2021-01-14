@@ -45,7 +45,7 @@
 }
 
 .price {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
   opacity: 0;
   transform: translateY(40px);
@@ -112,4 +112,19 @@
   font-size: 12px;
   font-family: 'Source Sans Pro';
   color: white;
+}
+
+#priceTxt {
+  margin-top: -0.5em;
+  margin-bottom: -1em;
+  font-weight: 700;
+  font-family: 'Source Sans Pro';
+  color: white;
+}
+
+#promotion {
+  text-decoration-line: line-through;
+  margin-top: -0.5em;
+  margin-bottom: -1em;
+  margin-right: 1em;
 }

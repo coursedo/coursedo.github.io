@@ -41,28 +41,3 @@ export function log(...arg) {
     )
   }
 }
-
-const checkDate = formated_Date => {
-  var date = new Date()
-  date.setDate(date.getDate() - 7)
-  const itemDate = new Date(formated_Date)
-  if (itemDate > date) {
-    return true
-  } else {
-    return false
-  }
-}
-
-export const checkBadge = (item) => {
-  if (checkDate(item.updatedAt) === true) {
-    return 'NEW'
-  }
-  else if (item.enrollCount > 100) {
-    return 'HOT'
-  }
-  else if (item.price === 0) {
-    return 'FREE'
-  } else {
-    return '$' + item.price
-  }
-}

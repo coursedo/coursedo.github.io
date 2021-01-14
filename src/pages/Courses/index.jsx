@@ -35,7 +35,7 @@ function Courses(props) {
     }
     dispatch(GetCoursesFilter.get(val))
     return () => {}
-  }, [keyword, page, sortOrder, sort])
+  }, [dispatch, keyword, page, sortOrder, sort])
 
   const background = () => {
     return (

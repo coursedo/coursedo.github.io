@@ -1,24 +1,22 @@
-import { UserOutlined } from '@ant-design/icons'
-
-import { Categories } from 'components/Categories'
-import { SignOut } from 'pages/SignIn/redux/actions'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { ROLES } from 'ultis/functions'
-import React, { useState } from 'react'
-
+import { MenuOutlined, UserOutlined } from '@ant-design/icons'
 import {
   Anchor,
-  Drawer,
-  Button,
-  Input,
   Avatar,
+  Button,
+  Drawer,
   Dropdown,
+  Input,
   Menu,
   Popover
 } from 'antd'
-import { MenuOutlined } from '@ant-design/icons'
+import { Categories } from 'components/Categories'
 import { UpdateSearch } from 'pages/Courses/redux/actions'
+import { SignOut } from 'pages/SignIn/redux/actions'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { ROLES } from 'ultis/functions'
+
 const { Search } = Input
 const { Link } = Anchor
 
