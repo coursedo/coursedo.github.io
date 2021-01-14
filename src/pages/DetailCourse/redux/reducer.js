@@ -1,6 +1,7 @@
 import {
   EnrollCourseSuccess,
   GetCourseDetailSuccess,
+  GetListFeedbackSuccess,
   UpdateCurChapter
 } from './actions'
 const initialState = {
@@ -27,6 +28,13 @@ export function DetailCourseReducer(state = initialState, action) {
       return {
         ...state,
         chapter: action.payload
+      }
+    case GetListFeedbackSuccess.type:
+      return {
+        ...state,
+        feedback: action.payload.results,
+        page: action.payload.page,
+        total: action.payload.total
       }
     default:
       return state

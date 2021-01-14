@@ -12,6 +12,9 @@ import {
   GetCourseDetail,
   GetCourseDetailFailed,
   GetCourseDetailSuccess,
+  GetListFeedback,
+  GetListFeedbackFailed,
+  GetListFeedbackSuccess,
   Rating,
   RatingFailed,
   RatingSuccess,
@@ -125,7 +128,7 @@ const saveProgress$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'POST',
-        url: `course/${action.payload.id}/enroll`,
+        url: `course/${action.payload.id}/rating`,
         param: action.payload.data,
         option: {
           format: 'json'
@@ -147,10 +150,38 @@ const saveProgress$ = action$ =>
     })
   )
 
+  const getFbs$ = action$ =>
+  action$.pipe(
+    ofType(GetListFeedback.type),
+    exhaustMap(action => {
+      return request({
+        method: 'GET',
+        url: `course/${action.payload.id}/feedback`,
+        param: {
+          page: action.payload.page,
+          limit: 10,
+        },
+      }).pipe(
+        map(result => {
+          if (result.status === 200) {
+            return GetListFeedbackSuccess.get({...result.data, page: action.payload.page})
+          }
+          GlobalModal.alertMessage('Information', result.data?.message)
+          return GetListFeedbackFailed.get(result)
+        }),
+        // @ts-ignore
+        catchError(error => {
+          return GetListFeedbackFailed.get(error)
+        })
+      )
+    })
+  )
+
 export const courseDetailEpics = combineEpics(
   getCourseDetailEpic$,
   enrollCourseEpic$,
   addWatchListEpic$,
   saveProgress$,
-  ratingEpic$
+  ratingEpic$,
+  getFbs$
 )

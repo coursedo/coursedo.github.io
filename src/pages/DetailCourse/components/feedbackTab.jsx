@@ -1,19 +1,24 @@
 import { Button, Col, Input, Rate, Row } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GetListFeedback, Rating } from '../redux/actions'
 import '../styles.css'
 
 const TextArea = Input.TextArea
+
 function FeedbackTab(props) {
   const dispatch = useDispatch()
   const [rating, setRating] = useState(0)
   const [feedback, setFeedback] = useState('')
 
   useEffect(() => {
-    dispatch(GetListFeedback.get(props.id))
+    const val = {
+      id: props.id,
+      page: 1
+    }
+    dispatch(GetListFeedback.get(val))
     return () => {}
-  }, [dispatch, props])
+  }, [dispatch])
 
   const renderTopRating = () => {
     return (
