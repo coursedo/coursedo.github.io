@@ -9,6 +9,7 @@ import Profile from 'pages/Profile'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import VerifyEmailPage from 'pages/VerifyEmail'
+import About from 'pages/About'
 import React from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import 'slick-carousel/slick/slick-theme.css'
@@ -30,6 +31,7 @@ function App() {
       <Route path="/courses" component={Courses} />
       <Route path="/profile" component={Profile} />
       <Route path="/course/:courseId/edit" component={EditCourse} />
+      <Route path="/about" component={About} />
     </Router>
   )
 }
