@@ -79,6 +79,13 @@ function AppHeader(props) {
         Profile
       </Menu.Item>
       <Menu.Item
+        key={'mycourse'}
+        onClick={() => {
+        }}
+      >
+        My Course
+      </Menu.Item>
+      <Menu.Item
         key={'logout'}
         onClick={() => {
           dispatch(SignOut.get())

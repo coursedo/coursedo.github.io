@@ -10,6 +10,7 @@ import {
 } from 'antd'
 import CInput from 'components/CInput'
 import Header from 'components/Header'
+import Footer from 'components/Footer'
 import { Formik } from 'formik'
 import { GetAllCategories } from 'pages/Dashboard/redux/actions'
 import React, { useEffect, useState } from 'react'
@@ -469,6 +470,7 @@ export default function CreateCourse(props) {
           )
         }}
       </Formik>
+      <Footer />
     </>
   )
 }
