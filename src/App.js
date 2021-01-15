@@ -36,7 +36,7 @@ function App() {
       <Route path="/my-courses" component={MyCourses} />
       <Route path="/course/:courseId/edit" component={EditCourse} />
       <Route path="/categories/:id" component={CateCourses} />
-      <Route path="/course/:id" component={DetailCourse} />
+      <Route exact path="/course/:id" component={DetailCourse} />
       <Route path="/about" component={About} />
     </Router>
   )

@@ -1,4 +1,5 @@
 import {
+  CleanCourse,
   EnrollCourseSuccess,
   GetCourseDetailSuccess,
   GetListFeedbackSuccess,
@@ -6,7 +7,10 @@ import {
 } from './actions'
 const initialState = {
   course: null,
-  chapter: null
+  chapter: null,
+  feedbacks: [],
+  total: 0,
+  page: 1,
 }
 
 export function DetailCourseReducer(state = initialState, action) {
@@ -15,6 +19,7 @@ export function DetailCourseReducer(state = initialState, action) {
       return {
         ...state,
         course: action.payload,
+        chapter: null
       }
     case EnrollCourseSuccess.type:
       return {
@@ -32,9 +37,15 @@ export function DetailCourseReducer(state = initialState, action) {
     case GetListFeedbackSuccess.type:
       return {
         ...state,
-        feedback: action.payload.results,
+        feedbacks: action.payload.results,
         page: action.payload.page,
         total: action.payload.total
+      }
+      case CleanCourse.type:
+      return {
+        ...state,
+        course: null,
+        chapter: null
       }
     default:
       return state
