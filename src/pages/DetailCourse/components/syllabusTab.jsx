@@ -61,6 +61,10 @@ function SyllabusTab({ chapters, poster }) {
                 playsinline
                 url={chapter?.video}
                 onProgress={({ playedSeconds }) => setProgress(playedSeconds)}
+                controls
+                playbackRate={2}
+                width="896px"
+                height="504px"
               />
             </Row>
           ) : (
