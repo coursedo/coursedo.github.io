@@ -281,10 +281,7 @@ function DetailCourse(props) {
           </TabPane>
           <TabPane tab="Ratings & Reviews" key="3">
             <FeedbackTab
-              id={course?.id}
-              rating={course?.rating}
-              ratingCount={course?.ratingCount}
-              allows={course?.isEnrolled}
+              
             />
           </TabPane>
         </Tabs>

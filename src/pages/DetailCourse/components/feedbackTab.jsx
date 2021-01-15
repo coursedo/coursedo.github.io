@@ -6,19 +6,23 @@ import '../styles.css'
 
 const TextArea = Input.TextArea
 
-function FeedbackTab(props) {
+function FeedbackTab() {
   const dispatch = useDispatch()
   const [rating, setRating] = useState(0)
   const [feedback, setFeedback] = useState('')
+  const course = useSelector(state => state.DetailCourse.course)
 
   useEffect(() => {
-    const val = {
-      id: props.id,
-      page: 1
+    if (course !== null && course?.id !== null) {
+      const val = {
+        id: course.id,
+        page: 1
+      }
+      dispatch(GetListFeedback.get(val))
     }
-    dispatch(GetListFeedback.get(val))
+
     return () => {}
-  }, [dispatch])
+  }, [dispatch, course])
 
   const renderTopRating = () => {
     return (
@@ -43,17 +47,17 @@ function FeedbackTab(props) {
             }}
           >
             <p className="rateTxt" style={{ marginBlock: '0em' }}>
-              {props.rating}
+              {course?.rating}
             </p>
             <p id="introTxt">
-              {props.ratingCount}{' '}
-              {props.ratingCount === 1 ? 'rating' : 'ratings'}
+              {course?.ratingCount}{' '}
+              {course?.ratingCount === 1 ? 'rating' : 'ratings'}
             </p>
           </div>
 
           <Rate
             disabled
-            defaultValue={props.rating}
+            defaultValue={course?.rating}
             style={{
               fontSize: 50,
               marginLeft: 20,
@@ -61,7 +65,7 @@ function FeedbackTab(props) {
             }}
           />
         </Row>
-        {props.allows ? (
+        {course?.isEnrolled ? (
           <Col>
             <Row
               style={{
@@ -110,7 +114,7 @@ function FeedbackTab(props) {
                           rating: rating,
                           feedback: feedback
                         },
-                        id: props.id
+                        id: course?.id
                       }
                       dispatch(Rating.get(value))
                     }
