@@ -1,4 +1,8 @@
-import { AddToWatchListSuccess } from 'pages/DetailCourse/redux/actions'
+import {
+  AddToWatchList,
+  AddToWatchListFailed,
+  AddToWatchListSuccess
+} from 'pages/DetailCourse/redux/actions'
 import {
   ChangePassword,
   ChangePasswordFailed,
@@ -62,6 +66,16 @@ export function authReducer(state = initialState, action) {
       }
     case GetWatchlistFailed.type:
       return { ...state, isLoading: false }
+    case AddToWatchList.type:
+      return { ...state, isLoading: true }
+    case AddToWatchListSuccess.type:
+      return {
+        ...state,
+        watchlist: action.payload,
+        isLoading: false
+      }
+    case AddToWatchListFailed.type:
+      return { ...state, isLoading: false }
     case RefreshTokenSuccess.type:
       return {
         ...state,
@@ -75,8 +89,8 @@ export function authReducer(state = initialState, action) {
       return { ...state, isLoading: false }
     case ChangePasswordFailed.type:
       return { ...state, isLoading: false }
-      case AddToWatchListSuccess.type:
-      return { ...state, watchlist: action.payload, }
+    case AddToWatchListSuccess.type:
+      return { ...state, watchlist: action.payload }
     case SignOut.type:
       return initialState
     default:
