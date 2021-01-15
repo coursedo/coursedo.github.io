@@ -13,14 +13,20 @@ import Profile from 'pages/Profile'
 import SignIn from 'pages/SignIn'
 import SignUp from 'pages/SignUp'
 import VerifyEmailPage from 'pages/VerifyEmail'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import 'slick-carousel/slick/slick-theme.css'
 import 'slick-carousel/slick/slick.css'
 import { history } from 'ultis/functions'
 import './App.less'
+import ReactGA from 'react-ga'
 
 function App() {
+  useEffect(() => {
+    ReactGA.initialize('G-85NDZ9JHMP')
+    history.listen(location => ReactGA.pageview(location.pathname))
+    return () => {}
+  }, [])
   return (
     <Router history={history}>
       <Route exact path="/" component={Home} />

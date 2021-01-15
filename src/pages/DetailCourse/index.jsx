@@ -1,4 +1,5 @@
-import { Breadcrumb, Button, Col, Rate, Row, Tabs, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Col, Rate, Row, Spin, Tabs } from 'antd'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
 import 'components/Header/header.css'
@@ -21,7 +22,6 @@ import {
   GetCourseDetail
 } from './redux/actions'
 import './styles.css'
-import { LoadingOutlined } from '@ant-design/icons'
 
 const { TabPane } = Tabs
 
@@ -37,6 +37,7 @@ function DetailCourse(props) {
   const watchlist = useSelector(state => state.Auth.watchlist)
   const id = props.match.params.id
   const course = useSelector(state => state.DetailCourse.course)
+  const isLoading = useSelector(state => state.DetailCourse.isLoading)
 
   useEffect(() => {
     dispatch(GetCourseDetail.get(id))
@@ -265,6 +266,14 @@ function DetailCourse(props) {
             </Col>
           </Row>
         </div>
+      </div>
+    )
+  }
+
+  if (isLoading || !course) {
+    return (
+      <div className="chooseContainer">
+        <Spin indicator={loadingIcon} />
       </div>
     )
   }
