@@ -60,7 +60,7 @@ const enrollCourseEpic$ = action$ =>
       }).pipe(
         map(result => {
           if (result.status === 200) {
-            return EnrollCourseSuccess.get(result.data)
+            return GetCourseDetail.get(action.payload.id)
           }
           GlobalModal.alertMessage('Information', result.data?.message)
           return EnrollCourseFailed.get(result)

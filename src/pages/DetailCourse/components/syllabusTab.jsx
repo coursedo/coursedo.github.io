@@ -62,7 +62,7 @@ function SyllabusTab({ chapters, poster }) {
                 url={chapter?.video}
                 onProgress={({ playedSeconds }) => setProgress(playedSeconds)}
                 controls
-                playbackRate={2}
+                playbackRate={1}
                 width="896px"
                 height="504px"
               />
