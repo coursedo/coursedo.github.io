@@ -1,20 +1,34 @@
 import {
   EnrollCourseSuccess,
+  GetCourseDetail,
+  GetCourseDetailFailed,
   GetCourseDetailSuccess,
   GetListFeedbackSuccess,
   UpdateCurChapter
 } from './actions'
 const initialState = {
   course: null,
-  chapter: null
+  chapter: null,
+  isLoading: false
 }
 
 export function DetailCourseReducer(state = initialState, action) {
   switch (action.type) {
+    case GetCourseDetail.type:
+      return {
+        ...state,
+        isLoading: true
+      }
     case GetCourseDetailSuccess.type:
       return {
         ...state,
         course: action.payload,
+        isLoading: false
+      }
+    case GetCourseDetailFailed.type:
+      return {
+        ...state,
+        isLoading: false
       }
     case EnrollCourseSuccess.type:
       return {

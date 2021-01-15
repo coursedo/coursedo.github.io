@@ -1,36 +1,28 @@
-import {
-  Breadcrumb,
-  Button,
-  Col,
-  Menu,
-  Pagination,
-  Rate,
-  Row,
-  Select
-} from 'antd'
-import bgPic from 'assets/images/bg.png'
-import CourseCard from 'components/CourseCard'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Col, Rate, Row, Spin, Tabs } from 'antd'
 import Footer from 'components/Footer'
 import Header from 'components/Header'
 import 'components/Header/header.css'
+import moment from 'moment'
+import { UpdateCurCate } from 'pages/Courses/redux/actions'
+import SwipeList from 'pages/Home/components/swipeComponent'
 import 'pages/Home/home.css'
-import './styles.css'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
-import { AddToWatchList, EnrollCourse, GetCourseDetail } from './redux/actions'
 import { useHistory } from 'react-router-dom'
-import { UpdateCurCate } from 'pages/Courses/redux/actions'
-import { ROLES } from 'ultis/functions'
-import { Tabs } from 'antd'
-import IntroduceTab from './components/introduceTab'
-import { courses } from 'pages/Home/constant'
-import moment from 'moment'
-import SyllabusTab from './components/syllabusTab'
-import SwipeList from 'pages/Home/components/swipeComponent'
+import { COLOR, ROLES } from 'ultis/functions'
 import FeedbackTab from './components/feedbackTab'
+import IntroduceTab from './components/introduceTab'
+import SyllabusTab from './components/syllabusTab'
+import { AddToWatchList, EnrollCourse, GetCourseDetail } from './redux/actions'
+import './styles.css'
 
 const { TabPane } = Tabs
+
+const loadingIcon = (
+  <LoadingOutlined style={{ fontSize: 30, color: COLOR.primary1 }} spin />
+)
 
 function DetailCourse(props) {
   const dispatch = useDispatch()
@@ -39,6 +31,7 @@ function DetailCourse(props) {
   const user = useSelector(state => state.Auth.user)
   const id = props.match.params.id
   const course = useSelector(state => state.DetailCourse.course)
+  const isLoading = useSelector(state => state.DetailCourse.isLoading)
 
   useEffect(() => {
     dispatch(GetCourseDetail.get(id))
@@ -254,6 +247,14 @@ function DetailCourse(props) {
             </Col>
           </Row>
         </div>
+      </div>
+    )
+  }
+
+  if (isLoading || !course) {
+    return (
+      <div className="chooseContainer">
+        <Spin indicator={loadingIcon} />
       </div>
     )
   }
