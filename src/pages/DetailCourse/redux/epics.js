@@ -137,7 +137,7 @@ const saveProgress$ = action$ =>
         map(result => {
           if (result.status === 200) {
             GlobalModal.alertMessage('Information', 'Thanks for your feedback!!!')
-            return GetListFeedback.get({ page: 1, id:action.payload.id })
+            return GetCourseDetail.get(action.payload.id)
           }
           GlobalModal.alertMessage('Information', result.data?.message)
           return RatingFailed.get(result)
