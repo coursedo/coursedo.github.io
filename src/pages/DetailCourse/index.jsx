@@ -203,8 +203,8 @@ function DetailCourse(props) {
                         {watchlist?.length > 0 &&
                         watchlist.filter(item => item.id === course?.id)
                           .length > 0
-                          ? 'Add to watchlist'
-                          : 'Remove from watchlist'}
+                          ? 'Remove from watchlist'
+                          : 'Add to watchlist'}
                       </Button>
                     </Row>
                   ) : (
@@ -228,8 +228,8 @@ function DetailCourse(props) {
                       {watchlist?.length > 0 &&
                       watchlist.filter(item => item.id === course?.id).length >
                         0
-                        ? 'Add to watchlist'
-                        : 'Remove from watchlist'}
+                        ? 'Remove from watchlist'
+                        : 'Add to watchlist'}
                     </Button>
                   )
                 ) : (
