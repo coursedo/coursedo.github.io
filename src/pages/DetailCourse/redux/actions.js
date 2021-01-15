@@ -25,3 +25,5 @@ export const GetListFeedbackSuccess = defineAction('GET_LIST_FEEDBACK_SUCCESS')
 export const GetListFeedbackFailed = defineAction('GET_LIST_FEEDBACK_FAILED')
 
 export const UpdateCurChapter = defineAction('UPDATE_CUR_CHAPTER')
+export const CleanCourse = defineAction('CLEAN_COURSE')
+export const CleanFeedbacks = defineAction('CLEAN_FEEDBACKS')

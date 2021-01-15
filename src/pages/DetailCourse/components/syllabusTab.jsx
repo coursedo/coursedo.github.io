@@ -44,53 +44,65 @@ function SyllabusTab({ chapters, poster }) {
         <Col span={6} xs={24} sm={12} md={6}>
           {renderChapter()}
         </Col>
-        <Col span={18} xs={24} sm={18}>
-          <p id="introTxt">
-            Chapter {chapter.numberId}: {chapter.name}
-          </p>
-          <p id="desTxt">Description: {chapter.description}</p>
-          {chapter?.videp !== null ? (
+        <Col span={12} xs={24} sm={12}>
+          {chapter !== null ? (
             <div>
+              <p id="introTxt">
+                Chapter {chapter?.numberId}: {chapter?.name}
+              </p>
+              <p id="desTxt">Description: {chapter?.description}</p>
+            </div>
+          ) : (
+            <div />
+          )}
+          {chapter?.video !== null ? (
+            <Row>
               <ReactPlayer
-                url={chapter.video}
+                playsinline
+                url={chapter?.video}
                 onProgress={({ playedSeconds }) => setProgress(playedSeconds)}
               />
-            </div>
+            </Row>
           ) : (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </Col>
       </Row>
-      <Row style={{ marginTop: 50 }}>
-        <Col span={8} />
-        <Col span={8} xs={24} sm={12} md={8}>
-          <Button
-            style={{
-              marginTop: '1vw',
-              backgroundColor: '#FFC000',
-              color: 'white',
-              height: 40,
-              width: 200,
-              fontSize: 20,
-              alignItems: 'center'
-            }}
-            type="primary"
-            onClick={() => {
-              const value = {
-                data: {
-                  currentChapter: chapter.id,
-                  currentVideoTime: progress
-                },
-                courseId: course.id
-              }
-              dispatch(SaveProgress.get(value))
-            }}
-          >
-            Update progression
-          </Button>
-        </Col>
-        <Col span={8} />
-      </Row>
+      {chapter !== null && chapter?.video !== null && course?.isEnrolled ? (
+        <Row style={{ marginTop: 50 }}>
+          <Col span={8} />
+          <Col span={8} xs={24} sm={12} md={8}>
+            <Button
+              style={{
+                marginTop: '1vw',
+                backgroundColor: '#FFC000',
+                color: 'white',
+                height: 40,
+                width: 200,
+                fontSize: 20,
+                alignItems: 'center'
+              }}
+              type="primary"
+              onClick={() => {
+                const value = {
+                  data: {
+                    currentChapter: chapter?.numberId,
+                    currentVideoTime: progress
+                  },
+                  courseId: course?.id,
+                  enrollmentId: course?.enrollmentId
+                }
+                dispatch(SaveProgress.get(value))
+              }}
+            >
+              Update progression
+            </Button>
+          </Col>
+          <Col span={8} />
+        </Row>
+      ) : (
+        <div />
+      )}
     </div>
   )
 }

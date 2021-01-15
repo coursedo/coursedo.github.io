@@ -1,3 +1,4 @@
+import { AddToWatchListSuccess } from 'pages/DetailCourse/redux/actions'
 import {
   AddToWatchList,
   AddToWatchListFailed,
@@ -89,6 +90,8 @@ export function authReducer(state = initialState, action) {
       return { ...state, isLoading: false }
     case ChangePasswordFailed.type:
       return { ...state, isLoading: false }
+      case AddToWatchListSuccess.type:
+      return { ...state, watchlist: action.payload, }
     case SignOut.type:
       return initialState
     default:

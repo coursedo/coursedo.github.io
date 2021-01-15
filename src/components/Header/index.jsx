@@ -117,7 +117,7 @@ function AppHeader(props) {
                 overlay={Categories(categoryList)}
                 style={{ marginBottom: 30 }}
               >
-                <a id="categoriesTxt" className="ant-dropdown-link" href="#">
+                <a id="categoriesTxt" className="ant-dropdown-link">
                   Categories
                 </a>
               </Dropdown>

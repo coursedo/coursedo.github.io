@@ -1,4 +1,6 @@
 import {
+  CleanCourse,
+  CleanFeedbacks,
   EnrollCourseSuccess,
   GetCourseDetail,
   GetCourseDetailFailed,
@@ -9,7 +11,10 @@ import {
 const initialState = {
   course: null,
   chapter: null,
-  isLoading: false
+  isLoading: false,
+  feedbacks: [],
+  total: 0,
+  page: 1
 }
 
 export function DetailCourseReducer(state = initialState, action) {
@@ -28,7 +33,8 @@ export function DetailCourseReducer(state = initialState, action) {
     case GetCourseDetailFailed.type:
       return {
         ...state,
-        isLoading: false
+        isLoading: false,
+        chapter: null
       }
     case EnrollCourseSuccess.type:
       return {
@@ -46,9 +52,22 @@ export function DetailCourseReducer(state = initialState, action) {
     case GetListFeedbackSuccess.type:
       return {
         ...state,
-        feedback: action.payload.results,
+        feedbacks: action.payload.results,
         page: action.payload.page,
         total: action.payload.total
+      }
+    case CleanCourse.type:
+      return {
+        ...state,
+        course: null,
+        chapter: null
+      }
+    case CleanFeedbacks.type:
+      return {
+        ...state,
+        feedbacks: [],
+        total: 0,
+        page: 1
       }
     default:
       return state

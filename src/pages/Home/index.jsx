@@ -84,7 +84,7 @@ function Home() {
         <div id="swipe">
           <p id="type">Top categories</p>
           <SwipeList list={trendCategory} type={'category'} />
-          <DiscoBtn onClick={() => history.push('/categories')} />
+          <DiscoBtn onClick={() => history.push('/courses')} />
         </div>
       </div>
       <Footer />
