@@ -102,15 +102,18 @@ function FeedbackTab(props) {
                     alignItems: 'center'
                   }}
                   type="primary"
+                  disabled={rating === 0}
                   onClick={() => {
-                    const value = {
-                      data: {
-                        rating: rating,
-                        feedback: feedback
-                      },
-                      id: props.id
+                    if (rating > 0 || (rating > 0 && /\S+/.test(feedback))) {
+                      const value = {
+                        data: {
+                          rating: rating,
+                          feedback: feedback
+                        },
+                        id: props.id
+                      }
+                      dispatch(Rating.get(value))
                     }
-                    dispatch(Rating.get(value))
                   }}
                 >
                   Send
@@ -132,9 +135,7 @@ function FeedbackTab(props) {
         Ratings & Reviews
       </p>
       {renderTopRating()}
-      <Row>
-        
-      </Row>
+      <Row></Row>
     </div>
   )
 }
