@@ -1,0 +1,88 @@
+.courseBg {
+  margin: auto;
+  justify-content: center;
+  background-size: contain;
+  background-position: center;
+  background-size: contain;
+}
+
+.courseBgPhone {
+  margin: auto;
+  justify-content: center;
+  background-size: contain;
+  background-position: center;
+  background-size: contain;
+}
+
+.overBg {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  background: rgba(80, 72, 72, 0.5);
+  backdrop-filter: blur(5px);
+  padding: 5vmin;
+}
+
+#courseHeader {
+  font-family: Source Sans Pro;
+  font-size: calc(20px + 0.5vmin);
+  font-style: normal;
+  font-weight: 600;
+  color: white;
+  width: 50vw;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-top: 20px;
+}
+
+#courseTeacher {
+  font-family: Source Sans Pro;
+  font-size: calc(14px + 0.5vmin);
+  font-style: normal;
+  color: white;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+#promotionPrice {
+  font-family: Source Sans Pro;
+  font-size: calc(12px + 0.5vmin);
+  font-style: normal;
+  color: white;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-decoration-line: line-through;
+  margin-right: 1em;
+}
+
+#introHeader {
+  font-family: Source Sans Pro;
+  font-size: calc(20px + 0.5vmin);
+  font-style: normal;
+  font-weight: 600;
+  color: FF8A00;
+  width: 50vw;
+  margin-top: 20px;
+}
+
+#introTxt {
+  font-family: Source Sans Pro;
+  font-size: calc(14px + 0.5vmin);
+  font-style: normal;
+  font-weight: 700;
+  color: black;
+}
+
+#desTxt {
+  font-family: Source Sans Pro;
+  font-size: calc(12px + 0.5vmin);
+  font-style: normal;
+  color: black;
+  margin-top: -1em;
+}
+
+.rateTxt {
+  font-family: Source Sans Pro;
+  font-size: calc(70px + 0.5vmin);
+  font-style: normal;
+  font-weight: 700;
+  color: black;
+  margin-top: 1em;
+}

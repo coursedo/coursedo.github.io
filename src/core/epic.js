@@ -4,11 +4,13 @@ import { dashboardEpics } from 'pages/Dashboard/redux/epics'
 import { courseEpics } from 'pages/CreateCourse/redux/epics'
 import { homeEpics } from 'pages/Home/redux/epics'
 import { coursesEpics } from 'pages/Courses/redux/epics'
+import { courseDetailEpics } from 'pages/DetailCourse/redux/epics'
 
 export const rootEpic = combineEpics(
   authEpics,
   dashboardEpics,
   courseEpics,
   homeEpics,
-  coursesEpics
+  coursesEpics,
+  courseDetailEpics
 )
