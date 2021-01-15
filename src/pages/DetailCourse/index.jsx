@@ -18,13 +18,17 @@ import './styles.css'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
-import { AddToWatchList, EnrollCourse, GetCourseDetail } from './redux/actions'
+import {
+  AddToWatchList,
+  CleanCourse,
+  EnrollCourse,
+  GetCourseDetail
+} from './redux/actions'
 import { useHistory } from 'react-router-dom'
 import { UpdateCurCate } from 'pages/Courses/redux/actions'
 import { ROLES } from 'ultis/functions'
 import { Tabs } from 'antd'
 import IntroduceTab from './components/introduceTab'
-import { courses } from 'pages/Home/constant'
 import moment from 'moment'
 import SyllabusTab from './components/syllabusTab'
 import SwipeList from 'pages/Home/components/swipeComponent'
@@ -42,7 +46,9 @@ function DetailCourse(props) {
 
   useEffect(() => {
     dispatch(GetCourseDetail.get(id))
-    return () => {}
+    return () => {
+      dispatch(CleanCourse.get())
+    }
   }, [dispatch, id])
 
   const background = () => {
@@ -60,8 +66,8 @@ function DetailCourse(props) {
             className="courseBg"
             style={{
               backgroundImage: `url(${
-                course.thumbnail
-                  ? course.thumbnail
+                course?.thumbnail
+                  ? course?.thumbnail
                   : 'https://source.unsplash.com/random'
               })`,
               width: '100vw',
@@ -75,8 +81,8 @@ function DetailCourse(props) {
             className="courseBgPhone"
             style={{
               backgroundImage: `url(${
-                course.thumbnail
-                  ? course.thumbnail
+                course?.thumbnail
+                  ? course?.thumbnail
                   : 'https://source.unsplash.com/random'
               })`,
               width: '100vw',
@@ -90,11 +96,6 @@ function DetailCourse(props) {
     )
   }
 
-  ;<link
-    rel="stylesheet"
-    href="https://video-react.github.io/assets/video-react.css"
-  />
-
   const renderHeaderContent = () => {
     return (
       <div className="main">
@@ -106,51 +107,51 @@ function DetailCourse(props) {
                   <a
                     id="courseTeacher"
                     onClick={() => {
-                      dispatch(UpdateCurCate.get(course.category))
-                      history.push(`/categories/${course.categoryId}`)
+                      dispatch(UpdateCurCate.get(course?.category))
+                      history.push(`/categories/${course?.categoryId}`)
                     }}
                   >
-                    {course.category}
+                    {course?.category}
                   </a>
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>
-                  <a id="courseTeacher">{course.name}</a>
+                  <a id="courseTeacher">{course?.name}</a>
                 </Breadcrumb.Item>
               </Breadcrumb>
-              <p id="courseHeader">{course.name}</p>
-              <p id="courseTeacher">{course.teacherName}</p>
+              <p id="courseHeader">{course?.name}</p>
+              <p id="courseTeacher">{course?.teacherName}</p>
               <Row>
                 <Rate
                   className="courseTeacher"
                   disabled
-                  defaultValue={course.rating}
+                  defaultValue={course?.rating}
                 />
-                <p id="courseTeacher">({course.ratingCount})</p>
+                <p id="courseTeacher">({course?.ratingCount})</p>
               </Row>
               <Row style={{ display: 'flex', alignItems: 'center' }}>
-                {course.promotionPrice !== null &&
-                  course.promotionPrice >= 0 &&
-                  course.promotionPrice < course.price && (
-                    <p id="promotionPrice">$ {course.price}</p>
+                {course?.promotionPrice !== null &&
+                  course?.promotionPrice >= 0 &&
+                  course?.promotionPrice < course?.price && (
+                    <p id="promotionPrice">$ {course?.price}</p>
                   )}
 
                 <p
                   id="courseTeacher"
                   style={{ fontSize: 24, fontWeight: 'bold' }}
                 >
-                  {course.price === 0 || course.promotionPrice === 0
+                  {course?.price === 0 || course?.promotionPrice === 0
                     ? 'FREE'
-                    : course.promotionPrice > 0
-                    ? '$' + course.promotionPrice
-                    : '$' + course.price}
+                    : course?.promotionPrice > 0
+                    ? '$' + course?.promotionPrice
+                    : '$' + course?.price}
                 </p>
               </Row>
               <Row>
-                <p id="courseTeacher">{course.enrollCount} already enrolled</p>
+                <p id="courseTeacher">{course?.enrollCount} already enrolled</p>
               </Row>
               {user ? (
                 user?.role === ROLES.STUDENT ? (
-                  course.isEnrolled === false ? (
+                  course?.isEnrolled === false ? (
                     <Row>
                       <Button
                         style={{
@@ -164,14 +165,14 @@ function DetailCourse(props) {
                         type="primary"
                         onClick={() => {
                           const value = {
-                            id: course.id,
+                            id: course?.id,
                             data: {
                               paidStatus: true,
                               total:
-                                course.promotionPrice &&
-                                course.promotionPrice > 0
-                                  ? course.promotionPrice
-                                  : course.price
+                                course?.promotionPrice &&
+                                course?.promotionPrice > 0
+                                  ? course?.promotionPrice
+                                  : course?.price
                             }
                           }
                           dispatch(EnrollCourse.get(value))
@@ -212,7 +213,7 @@ function DetailCourse(props) {
                       onClick={() => {
                         const value = {
                           id: user.id,
-                          courseId: course.id
+                          courseId: course?.id
                         }
                         dispatch(AddToWatchList.get(value))
                       }}
@@ -240,7 +241,7 @@ function DetailCourse(props) {
                 </Button>
               )}
               <p id="courseTeacher">
-                Last update: {moment(course.updatedAt).format('llll')}
+                Last update: {moment(course?.updatedAt).format('llll')}
               </p>
             </Col>
             <Col
@@ -250,7 +251,7 @@ function DetailCourse(props) {
                 alignItems: 'center'
               }}
             >
-              <p id="courseTeacher">{course.shortDescription}</p>
+              <p id="courseTeacher">{course?.shortDescription}</p>
             </Col>
           </Row>
         </div>
@@ -266,21 +267,24 @@ function DetailCourse(props) {
         <Tabs size="large" defaultActiveKey="1" centered>
           <TabPane tab="Information" key="1">
             <IntroduceTab
-              description={course.description}
-              teacherName={course.teacherName}
-              teacherEmail={course.teacherEmail}
-              teacherAvatar={course.teacherAvatar}
+              description={course?.description}
+              teacherName={course?.teacherName}
+              teacherEmail={course?.teacherEmail}
+              teacherAvatar={course?.teacherAvatar}
             />
           </TabPane>
           <TabPane tab="Syllabus" key="2">
-            <SyllabusTab chapters={course.chapters} poster={course.thumbnail} />
+            <SyllabusTab
+              chapters={course?.chapters}
+              poster={course?.thumbnail}
+            />
           </TabPane>
           <TabPane tab="Ratings & Reviews" key="3">
             <FeedbackTab
-              id={course.id}
-              rating={course.rating}
-              ratingCount={course.ratingCount}
-              allows={course.isEnrolled}
+              id={course?.id}
+              rating={course?.rating}
+              ratingCount={course?.ratingCount}
+              allows={course?.isEnrolled}
             />
           </TabPane>
         </Tabs>
@@ -288,7 +292,7 @@ function DetailCourse(props) {
           <p id="introHeader" style={{ color: '#FF8A00' }}>
             Similar courses
           </p>
-          <SwipeList list={course.relatedCourses} type={'courses'} />
+          <SwipeList list={course?.relatedCourses} type={'courses'} />
         </div>
       </div>
       <Footer />

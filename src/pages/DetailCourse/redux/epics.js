@@ -103,7 +103,7 @@ const saveProgress$ = action$ =>
     exhaustMap(action => {
       return request({
         method: 'PATCH',
-        url: `course/${action.payload.courseId}/enroll/${action.payload.enrollmentId}/watchlist`,
+        url: `course/${action.payload.courseId}/enroll/${action.payload.enrollmentId}`,
         param: action.payload.data,
       }).pipe(
         map(result => {

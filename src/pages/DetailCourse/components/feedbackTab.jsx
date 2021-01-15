@@ -132,6 +132,9 @@ function FeedbackTab(props) {
         Ratings & Reviews
       </p>
       {renderTopRating()}
+      <Row>
+        
+      </Row>
     </div>
   )
 }
