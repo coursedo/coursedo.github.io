@@ -1,4 +1,14 @@
-import { Button, Col, Input, Rate, Row } from 'antd'
+import {
+  Avatar,
+  Button,
+  Col,
+  Divider,
+  Input,
+  List,
+  Pagination,
+  Rate,
+  Row
+} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetListFeedback, Rating } from '../redux/actions'
@@ -11,6 +21,7 @@ function FeedbackTab() {
   const [rating, setRating] = useState(0)
   const [feedback, setFeedback] = useState('')
   const course = useSelector(state => state.DetailCourse.course)
+  const { page, feedbacks, total } = useSelector(state => state.DetailCourse)
 
   useEffect(() => {
     if (course !== null && course?.id !== null) {
@@ -117,6 +128,8 @@ function FeedbackTab() {
                         id: course?.id
                       }
                       dispatch(Rating.get(value))
+                      setRating(0)
+                      setFeedback('')
                     }
                   }}
                 >
@@ -133,12 +146,79 @@ function FeedbackTab() {
     )
   }
 
+  const updatePage = num => {
+    const val = {
+      id: course.id,
+      page: num
+    }
+    dispatch(GetListFeedback.get(val))
+  }
+
+  const renderFeedback = () => {
+    return (
+      <Col span={24}>
+        <Divider orientation="left">
+          <p id="introTxt">Reviews</p>
+        </Divider>
+        <List
+          style={{ marginTop: 50 }}
+          itemLayout="horizontal"
+          dataSource={feedbacks}
+          renderItem={item => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar src={item.avatar} />}
+                title={
+                  <Row
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <p id="introTxt">{item.fullName}</p>
+                    <Rate
+                      disabled
+                      defaultValue={item.rating}
+                      style={{
+                        fontSize: 20,
+                        marginLeft: 20,
+                        marginTop: -20,
+                        alignSelf: 'center'
+                      }}
+                    />
+                  </Row>
+                }
+                description={<p id="desTxt">{item.feedback}</p>}
+              />
+            </List.Item>
+          )}
+        />
+        <Row
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Divider></Divider>
+          <Pagination
+            current={page}
+            onChange={num => updatePage(num)}
+            total={total}
+            pageSize={6}
+          />
+        </Row>
+      </Col>
+    )
+  }
+
   return (
     <div>
       <p id="introHeader" style={{ color: '#FF8A00' }}>
         Ratings & Reviews
       </p>
       {renderTopRating()}
+      {renderFeedback()}
       <Row></Row>
     </div>
   )

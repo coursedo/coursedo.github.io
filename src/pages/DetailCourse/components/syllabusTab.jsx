@@ -44,7 +44,7 @@ function SyllabusTab({ chapters, poster }) {
         <Col span={6} xs={24} sm={12} md={6}>
           {renderChapter()}
         </Col>
-        <Col span={18} xs={24} sm={18}>
+        <Col span={12} xs={24} sm={12}>
           {chapter !== null ? (
             <div>
               <p id="introTxt">
@@ -56,12 +56,13 @@ function SyllabusTab({ chapters, poster }) {
             <div />
           )}
           {chapter?.video !== null ? (
-            <div>
+            <Row>
               <ReactPlayer
+                playsinline
                 url={chapter?.video}
                 onProgress={({ playedSeconds }) => setProgress(playedSeconds)}
               />
-            </div>
+            </Row>
           ) : (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}

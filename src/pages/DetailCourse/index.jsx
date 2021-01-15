@@ -73,7 +73,7 @@ function DetailCourse(props) {
                   : 'https://source.unsplash.com/random'
               })`,
               width: '100vw',
-              height: '50vh'
+              height: 'auto'
             }}
           >
             <div className="overBg">{renderHeaderContent()}</div>
