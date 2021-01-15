@@ -26,10 +26,10 @@ function CourseCard(props) {
         ((item.price - item.promotionPrice) / item.price) *
         100
       ).toFixed(2)}% OFF`
-    } else if (checkDate(item.updatedAt) === true) {
-      return 'NEW'
     } else if (item.enrollCount > 5) {
       return 'HOT'
+    } else if (checkDate(item.updatedAt) === true) {
+      return 'NEW'
     } else {
       return '$' + item.price
     }
