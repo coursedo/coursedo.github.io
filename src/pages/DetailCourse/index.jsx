@@ -41,6 +41,7 @@ function DetailCourse(props) {
   const history = useHistory()
   const isDesktopOrLaptop = useMediaQuery({ minDeviceWidth: 1224 })
   const user = useSelector(state => state.Auth.user)
+  const watchlist = useSelector(state => state.Auth.watchlist)
   const id = props.match.params.id
   const course = useSelector(state => state.DetailCourse.course)
 
@@ -49,7 +50,7 @@ function DetailCourse(props) {
     return () => {
       dispatch(CleanCourse.get())
     }
-  }, [dispatch, id])
+  }, [dispatch, id, watchlist])
 
   const background = () => {
     return (
@@ -160,7 +161,7 @@ function DetailCourse(props) {
                           height: 60,
                           width: 200,
                           fontSize: 20,
-                          marginRight: 20
+                          marginRight: 16
                         }}
                         type="primary"
                         onClick={() => {
@@ -186,7 +187,7 @@ function DetailCourse(props) {
                           color: '#FFC000',
                           height: 60,
                           width: 200,
-                          fontSize: 20
+                          fontSize: 16
                         }}
                         type="primary"
                         onClick={() => {
@@ -197,7 +198,11 @@ function DetailCourse(props) {
                           dispatch(AddToWatchList.get(value))
                         }}
                       >
-                        Add to watchlist
+                        {watchlist?.length > 0 &&
+                        watchlist.filter(item => item.id === course?.id)
+                          .length > 0
+                          ? 'Add to watchlist'
+                          : 'Remove from watchlist'}
                       </Button>
                     </Row>
                   ) : (
@@ -207,7 +212,7 @@ function DetailCourse(props) {
                         color: '#FFC000',
                         height: 60,
                         width: 200,
-                        fontSize: 20
+                        fontSize: 16
                       }}
                       type="primary"
                       onClick={() => {
@@ -218,7 +223,11 @@ function DetailCourse(props) {
                         dispatch(AddToWatchList.get(value))
                       }}
                     >
-                      Add to watchlist
+                      {watchlist?.length > 0 &&
+                      watchlist.filter(item => item.id === course?.id).length >
+                        0
+                        ? 'Add to watchlist'
+                        : 'Remove from watchlist'}
                     </Button>
                   )
                 ) : (
@@ -232,7 +241,7 @@ function DetailCourse(props) {
                     color: 'white',
                     height: 60,
                     width: 200,
-                    fontSize: 20
+                    fontSize: 16
                   }}
                   type="primary"
                   onClick={() => history.push('/signup')}
@@ -280,9 +289,7 @@ function DetailCourse(props) {
             />
           </TabPane>
           <TabPane tab="Ratings & Reviews" key="3">
-            <FeedbackTab
-              
-            />
+            <FeedbackTab />
           </TabPane>
         </Tabs>
         <div id="swipe" style={{ paddingBottom: 50 }}>
