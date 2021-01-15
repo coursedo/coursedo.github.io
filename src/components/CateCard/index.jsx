@@ -1,8 +1,13 @@
 import '../CourseCard/card.css'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { UpdateCurCate } from 'pages/Courses/redux/actions'
 
 //img, title
 function CateCard(props) {
+  const history = useHistory()
+  const dispatch = useDispatch()
   return (
     <div
       style={{
@@ -10,6 +15,10 @@ function CateCard(props) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center'
+      }}
+      onClick={() => {
+        dispatch(UpdateCurCate.get(props.title))
+        history.push(`/categories/${props.id}`)
       }}
     >
       <div

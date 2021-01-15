@@ -1,5 +1,6 @@
 import {
   CleanCourse,
+  CleanFeedbacks,
   EnrollCourseSuccess,
   GetCourseDetailSuccess,
   GetListFeedbackSuccess,
@@ -47,6 +48,13 @@ export function DetailCourseReducer(state = initialState, action) {
         course: null,
         chapter: null
       }
+      case CleanFeedbacks.type:
+        return {
+          ...state,
+          feedbacks: [],
+          total: 0,
+          page: 1,
+        }
     default:
       return state
   }

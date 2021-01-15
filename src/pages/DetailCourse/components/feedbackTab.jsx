@@ -11,7 +11,7 @@ import {
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetListFeedback, Rating } from '../redux/actions'
+import { CleanFeedbacks, GetListFeedback, Rating } from '../redux/actions'
 import '../styles.css'
 
 const TextArea = Input.TextArea
@@ -27,12 +27,14 @@ function FeedbackTab() {
     if (course !== null && course?.id !== null) {
       const val = {
         id: course.id,
-        page: 1
+        page: page
       }
       dispatch(GetListFeedback.get(val))
     }
 
-    return () => {}
+    return () => {
+      dispatch(CleanFeedbacks.get())
+    }
   }, [dispatch, course])
 
   const renderTopRating = () => {
@@ -205,7 +207,7 @@ function FeedbackTab() {
             current={page}
             onChange={num => updatePage(num)}
             total={total}
-            pageSize={6}
+            pageSize={10}
           />
         </Row>
       </Col>
